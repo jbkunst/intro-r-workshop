@@ -4,6 +4,8 @@ library(sf)
 library(dplyr)
 library(DBI)
 
+# https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile
+
 # 
 # URL:      http://142.93.20.188/phpmyadmin
 # Username: admin
@@ -39,3 +41,17 @@ escolaridad <- tbl(con,"personas") %>%
   collect(n)
 
 escolaridad <- right_join(escolaridad, geoid, by = c("ID_ZONA_LOC","COMUNA","DC"))
+
+
+
+archivo_shape <- "~/../Downloads/official_chile_2017_census_boundary_shapefile-master/R13/Distritos_Censales.dbf"
+
+st_layers(archivo_shape)
+
+dcapa <- read_sf(archivo_shape, layer = "Distritos_Censales")
+dcapa <- st_transform(dcapa, 32719)
+
+
+
+
+
