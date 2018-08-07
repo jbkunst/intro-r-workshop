@@ -1,4 +1,6 @@
+# devtools::install_github("tidyverse/ggplot2")
 library(tidyverse)
+library(sf)
 library(dplyr)
 library(DBI)
 
@@ -15,12 +17,25 @@ library(DBI)
 
 con <- dbConnect(
   RMySQL::MySQL(),
-  dbname = "matpuc",
+  dbname = "censo2017",
   host = "142.93.20.188", 
   port = 3306,
   user = "test",
   password = "HFW9KYZBnEYr!"
 )
 
-DBI::dbListTables(con)
+DBI::dbListTables(con) %>% 
+  map(tbl, src = con) %>% 
+  map(tally)
 
+tbl(con, "hogar")
+
+geoid <- tbl(con,"idgeo") %>% 
+  select(COMUNA, DC, ID_ZONA_LOC) %>% 
+  collect()
+
+escolaridad <- tbl(con,"personas") %>%
+  select(COMUNA, DC, ID_ZONA_LOC, P15,P09) %>%
+  collect(n)
+
+escolaridad <- right_join(escolaridad, geoid, by = c("ID_ZONA_LOC","COMUNA","DC"))
