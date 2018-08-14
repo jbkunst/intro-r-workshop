@@ -27,12 +27,23 @@ knitr::opts_chunk$set(
   warning = FALSE,
   dev = "svg",
   cache = TRUE,
-  cache.path = ".cache/"
+  cache.path = ".cache/",
+  fig.path = "static/imgs/slides/",
+  fig.width = 10,
+  fig.height = 6
 )
 
 library(jbkmisc)
 library(ggplot2)
-theme_set(theme_jbk(base_family = "Roboto Condensed") + theme(legend.position = "none"))
+theme_set(
+  theme_jbk(
+    base_family = "Roboto Condensed",
+    plot_margin = margin(5, 5, 5, 5)
+    ) + 
+    theme(
+      legend.position = "none",
+      )
+  )
 ```
 
 ----
@@ -106,7 +117,7 @@ personas
 casen_comuna <- casen %>% 
   mutate(comuna = as.numeric(comuna)) %>% 
   group_by(comuna) %>% 
-  summarise(ingreso_promedio = mean(y1, na.rm = TRUE))
+  summarise(ingreso_promedio_mm = mean(y1, na.rm = TRUE)/1000)
 casen_comuna
 ```
 
@@ -148,7 +159,6 @@ data <- data %>%
 data
 ```
 
-
 # Visualizar { .center }
 
 ---- 
@@ -164,7 +174,7 @@ Graficar ingreso promedio y escolaridad promedio por comuna
 <div id="left">
 ```{r results='hide'}
 p <- ggplot(data) +
-  geom_point(aes(x = ingreso_promedio, y = escolaridad_promedio))
+  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio))
 ```
 </div>
 <div id="right">
@@ -181,7 +191,7 @@ Agregamos más información
 <div id="left">
 ```{r results='hide'}
 p <- ggplot(data) +
-  geom_point(aes(x = ingreso_promedio, y = escolaridad_promedio,
+  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
                  color = region, size= personas))
 ```
 </div>
@@ -191,6 +201,82 @@ p
 ```
 </div>
 
+----
+
+Detalles 
+
+<div id="left">
+```{r results='hide'}
+p <- ggplot(data) +
+  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
+                 color = region, size= personas), alpha = 0.75) +
+  scale_color_viridis_d(option = "magma") +
+  scale_x_continuous(trans = "log", labels = scales::comma,
+                     breaks = seq(0, 1e3, by = 250))
+```
+</div>
+<div id="right">
+```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+p
+```
+</div>
+
+
+----
+
+Aquí *parte* la magia 
+
+<div id="left">
+```{r results='hide'}
+p <- ggplot(data) +
+  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
+                 color = region, size= personas), alpha = 0.75) +
+  scale_color_viridis_d(option = "magma") +
+  scale_x_continuous(trans = "log", labels = scales::comma,
+                     breaks = seq(0, 1e3, by = 250)) +
+  facet_wrap(~region2)
+```
+</div>
+<div id="right">
+```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+p
+```
+</div>
+
+----
+
+Aquí *sigue* la magia 
+
+<div id="left">
+```{r results='hide'}
+p <- ggplot(data) +
+  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
+                 color = region, size= personas), alpha = 0.75) +
+  scale_color_viridis_d(option = "magma") +
+  scale_x_continuous(trans = "log", labels = scales::comma,
+                     breaks = seq(0, 1e3, by = 250)) +
+  facet_wrap(~region2) +
+  geom_smooth(aes(x = ingreso_promedio_mm, y = escolaridad_promedio),
+              method = "lm", se = FALSE, color = "red", size = 1.2)
+```
+</div>
+<div id="right">
+```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+p
+```
+</div>
+
+----
+
+```{r, echo=FALSE}
+p
+```
+
+----
+
+```{r, echo=FALSE}
+widgetframe::frameWidget(plotly::ggplotly(p), height = 800)
+```
 
 
 # Modelar { .center }
@@ -198,7 +284,7 @@ p
 ----
 
 ```{r}
-ggplot(data, aes(x = ingreso_promedio, y = escolaridad_promedio)) +
+ggplot(data, aes(x = ingreso_promedio_mm, y = escolaridad_promedio)) +
   geom_point(aes(size = personas, color = region), alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE) + 
   scale_x_continuous(trans = "sqrt", labels = scales::comma) +
