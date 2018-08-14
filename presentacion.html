@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title> Introducción al Uso de R para Análisis Estadístico</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="libs/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="libs/reveal.js-3.3.0.1/css/theme/simple.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="static\css\styles.css"/>
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title"><br>Introducción al Uso de R para Análisis Estadístico</h1>
+</section>
+
+<section class="slide level2">
+
+<p><img src="static/imgs/datapipeline.png" alt="Flujo de trabajo" /></p>
+</section>
+<section><section id="importar" class="titleslide slide level1 center"><h1>Importar</h1></section><section class="slide level2">
+
+<p>Con R podemos acceder a información desde distintas fuentes:</p>
+<ul>
+<li class="fragment">Archivos de texto plano: txt, csv, tsv</li>
+<li class="fragment">Archivos MS excel, SPSS, SAS</li>
+<li class="fragment">Base de Datos: MySQL, SQLServer, PostgreSQL</li>
+<li class="fragment">APIs</li>
+</ul>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+
+comunas &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/codigos_comunales.csv&quot;</span>)
+comunas</code></pre></div>
+<pre><code>## # A tibble: 347 x 2
+##    CODIGO COMUNA       
+##     &lt;int&gt; &lt;chr&gt;        
+##  1  15101 Arica        
+##  2  15102 Camarones    
+##  3  15201 Putre        
+##  4  15202 General Lagos
+##  5   1101 Iquique      
+##  6   1402 Camiña       
+##  7   1403 Colchane     
+##  8   1404 Huara        
+##  9   1405 Pica         
+## 10   1401 Pozo Almonte 
+## # ... with 337 more rows</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(haven)
+
+casen &lt;-<span class="st"> </span><span class="kw">read_sav</span>(<span class="st">&quot;data/casen/Casen 2015.sav&quot;</span>)
+casen</code></pre></div>
+<pre><code>## # A tibble: 266,968 x 776
+##       folio     o id_vivienda region  provincia comuna zona  hogar tot_hog
+##       &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl+l&gt; &lt;dbl+lbl&gt; &lt;dbl+&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+##  1  1.10e10     1  1101100101 1       11        1101   1         1       1
+##  2  1.10e10     2  1101100101 1       11        1101   1         1       1
+##  3  1.10e10     3  1101100101 1       11        1101   1         1       1
+##  4  1.10e10     4  1101100101 1       11        1101   1         1       1
+##  5  1.10e10     5  1101100101 1       11        1101   1         1       1
+##  6  1.10e10     1  1101100102 1       11        1101   1         1       2
+##  7  1.10e10     1  1101100103 1       11        1101   1         1       1
+##  8  1.10e10     1  1101100104 1       11        1101   1         1       1
+##  9  1.10e10     2  1101100104 1       11        1101   1         1       1
+## 10  1.10e10     1  1101100105 1       11        1101   1         1       1
+## # ... with 266,958 more rows, and 767 more variables: tot_par &lt;dbl&gt;,
+## #   tot_nuc &lt;dbl&gt;, tot_per &lt;dbl&gt;, pres &lt;dbl+lbl&gt;, marca &lt;chr&gt;,
+## #   pco1 &lt;dbl+lbl&gt;, sexo &lt;dbl+lbl&gt;, edad &lt;dbl&gt;, ecivil &lt;dbl+lbl&gt;,
+## #   h5l &lt;dbl&gt;, h5h &lt;dbl&gt;, pareja &lt;dbl+lbl&gt;, nucleo &lt;dbl+lbl&gt;,
+## #   pco2 &lt;dbl+lbl&gt;, e1 &lt;dbl+lbl&gt;, e2a &lt;dbl+lbl&gt;, e2b &lt;dbl+lbl&gt;,
+## #   e2c &lt;dbl+lbl&gt;, e3 &lt;dbl+lbl&gt;, e4 &lt;dbl+lbl&gt;, e4_esp &lt;chr&gt;,
+## #   e5a &lt;dbl+lbl&gt;, e5a_esp &lt;chr&gt;, e5b &lt;dbl+lbl&gt;, e6a &lt;dbl+lbl&gt;,
+## #   e6b &lt;dbl+lbl&gt;, e6c_cod &lt;dbl+lbl&gt;, e6c &lt;chr&gt;, e6d &lt;dbl+lbl&gt;,
+## #   e7nom &lt;chr&gt;, e7dir &lt;chr&gt;, e7com &lt;chr&gt;, e7rbd &lt;dbl+lbl&gt;, e7dv &lt;dbl&gt;,
+## #   e7depen &lt;dbl+lbl&gt;, e7te &lt;dbl+lbl&gt;, e7rbd_sup &lt;dbl+lbl&gt;,
+## #   e7sup_gratuidad &lt;dbl+lbl&gt;, e7com_cod &lt;dbl+lbl&gt;, e8 &lt;dbl+lbl&gt;,
+## #   e9 &lt;dbl+lbl&gt;, e10a &lt;dbl+lbl&gt;, e10b &lt;dbl+lbl&gt;, e10c &lt;dbl+lbl&gt;,
+## #   e10d &lt;dbl+lbl&gt;, e10e &lt;dbl+lbl&gt;, e11a &lt;dbl+lbl&gt;, e11bt1 &lt;dbl+lbl&gt;,
+## #   e11bt1_esp &lt;chr&gt;, e11bt2 &lt;dbl+lbl&gt;, e11bt2_esp &lt;chr&gt;,
+## #   e12pbu &lt;dbl+lbl&gt;, e12pbt &lt;dbl+lbl&gt;, e12pbd &lt;dbl+lbl&gt;,
+## #   e12pbm &lt;dbl+lbl&gt;, e12bu &lt;dbl+lbl&gt;, e12bt &lt;dbl+lbl&gt;, e12bd &lt;dbl+lbl&gt;,
+## #   e12bm &lt;dbl+lbl&gt;, e12bpc &lt;dbl+lbl&gt;, e12mu &lt;dbl+lbl&gt;, e12mt &lt;dbl+lbl&gt;,
+## #   e12md &lt;dbl+lbl&gt;, e12mm &lt;dbl+lbl&gt;, e13a &lt;dbl+lbl&gt;, e13b &lt;dbl+lbl&gt;,
+## #   e14 &lt;dbl+lbl&gt;, e15a &lt;dbl+lbl&gt;, e15b &lt;dbl&gt;, e16t1 &lt;dbl+lbl&gt;,
+## #   e16t2 &lt;dbl+lbl&gt;, e0 &lt;dbl+lbl&gt;, o1 &lt;dbl+lbl&gt;, o2 &lt;dbl+lbl&gt;,
+## #   o3 &lt;dbl+lbl&gt;, o4 &lt;dbl+lbl&gt;, o5 &lt;dbl+lbl&gt;, o6 &lt;dbl+lbl&gt;,
+## #   o7r1 &lt;dbl+lbl&gt;, o7r2 &lt;dbl+lbl&gt;, o8 &lt;dbl+lbl&gt;, o9a &lt;chr&gt;, o9b &lt;chr&gt;,
+## #   oficio1 &lt;dbl+lbl&gt;, oficio4 &lt;chr+lbl&gt;, o10 &lt;dbl+lbl&gt;, o11 &lt;dbl+lbl&gt;,
+## #   o12 &lt;dbl+lbl&gt;, o13 &lt;dbl+lbl&gt;, o14 &lt;dbl+lbl&gt;, o15 &lt;dbl+lbl&gt;,
+## #   o16 &lt;dbl+lbl&gt;, o17 &lt;dbl+lbl&gt;, o18 &lt;dbl+lbl&gt;, o19 &lt;dbl+lbl&gt;,
+## #   o20 &lt;dbl+lbl&gt;, o21 &lt;chr&gt;, rama4_sub &lt;chr+lbl&gt;, rama1_sub &lt;dbl+lbl&gt;,
+## #   o22 &lt;chr&gt;, ...</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(DBI)
+
+con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(
+  RMySQL<span class="op">::</span><span class="kw">MySQL</span>(),
+  <span class="dt">dbname =</span> <span class="st">&quot;censo2017&quot;</span>,
+  <span class="dt">host =</span> <span class="st">&quot;142.93.20.188&quot;</span>, 
+  <span class="dt">port =</span> <span class="dv">3306</span>,
+  <span class="dt">user =</span> <span class="st">&quot;test&quot;</span>,
+  <span class="dt">password =</span> <span class="st">&quot;HFW9KYZBnEYr!&quot;</span>
+)
+
+<span class="kw">dbListTables</span>(con)</code></pre></div>
+<pre><code>## [1] &quot;hogar&quot;    &quot;idgeo&quot;    &quot;personas&quot; &quot;vivienda&quot;</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">personas &lt;-<span class="st"> </span><span class="kw">tbl</span>(con,<span class="st">&quot;personas&quot;</span>)
+personas</code></pre></div>
+<pre><code>## # Source:   table&lt;personas&gt; [?? x 42]
+## # Database: mysql 5.7.23-0ubuntu0.16.04.1 [test@142.93.20.188:/censo2017]
+##    REGION PROVINCIA COMUNA    DC  AREA ZC_LOC ID_ZONA_LOC  NVIV NHOGAR
+##     &lt;int&gt;     &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt;       &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+##  1     15       152  15202     1     2      6       13225     1      1
+##  2     15       152  15202     1     2      6       13225     3      1
+##  3     15       152  15202     1     2      6       13225     3      1
+##  4     15       152  15202     1     2      6       13225     3      1
+##  5     15       152  15202     1     2      6       13225     3      1
+##  6     15       152  15202     1     2      6       13225     9      1
+##  7     15       152  15202     1     2      6       13225     9      1
+##  8     15       152  15202     1     2      6       13225     9      1
+##  9     15       152  15202     1     2      6       13225     9      1
+## 10     15       152  15202     1     2      6       13225    10      1
+## # ... with more rows, and 33 more variables: PERSONAN &lt;int&gt;, P07 &lt;int&gt;,
+## #   P08 &lt;int&gt;, P09 &lt;int&gt;, P10 &lt;int&gt;, P10COMUNA &lt;int&gt;, P10PAIS &lt;int&gt;,
+## #   P11 &lt;int&gt;, P11COMUNA &lt;int&gt;, P11PAIS &lt;int&gt;, P12 &lt;int&gt;, P12COMUNA &lt;int&gt;,
+## #   P12PAIS &lt;int&gt;, P12A_LLEGADA &lt;int&gt;, P12A_TRAMO &lt;int&gt;, P13 &lt;int&gt;,
+## #   P14 &lt;int&gt;, P15 &lt;int&gt;, P15A &lt;int&gt;, P16 &lt;int&gt;, P16A &lt;int&gt;,
+## #   P16A_OTRO &lt;int&gt;, P17 &lt;int&gt;, P18 &lt;chr&gt;, P19 &lt;int&gt;, P20 &lt;int&gt;,
+## #   P21M &lt;int&gt;, P21A &lt;int&gt;, P10PAIS_GRUPO &lt;int&gt;, P11PAIS_GRUPO &lt;int&gt;,
+## #   P12PAIS_GRUPO &lt;int&gt;, ESCOLARIDAD &lt;int&gt;, P16A_GRUPO &lt;int&gt;</code></pre>
+</section></section>
+<section><section id="transformar" class="titleslide slide level1 center"><h1>Transformar</h1></section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">casen_comuna &lt;-<span class="st"> </span>casen <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">comuna =</span> <span class="kw">as.numeric</span>(comuna)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(comuna) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">ingreso_promedio =</span> <span class="kw">mean</span>(y1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+casen_comuna</code></pre></div>
+<pre><code>## # A tibble: 324 x 2
+##    comuna ingreso_promedio
+##     &lt;dbl&gt;            &lt;dbl&gt;
+##  1   1101          550515.
+##  2   1107          418036.
+##  3   1401          423393.
+##  4   1402          259875 
+##  5   1404          316227.
+##  6   1405          425864.
+##  7   2101          535312.
+##  8   2102          567832.
+##  9   2103          373716.
+## 10   2104          379899.
+## # ... with 314 more rows</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">personas_resumen &lt;-<span class="st"> </span>personas <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(region, comuna) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">personas =</span> <span class="kw">n</span>(), <span class="dt">escolaridad_promedio =</span> <span class="kw">mean</span>(ESCOLARIDAD)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">collect</span>()
+
+personas_resumen</code></pre></div>
+<pre><code>## # A tibble: 346 x 4
+## # Groups:   region [15]
+##    region comuna personas escolaridad_promedio
+##     &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;                &lt;dbl&gt;
+##  1      1   1101   191468                 12.6
+##  2      1   1107   108375                 12.2
+##  3      1   1401    15711                 11.8
+##  4      1   1402     1250                 15.2
+##  5      1   1403     1728                 15.9
+##  6      1   1404     2730                 13.1
+##  7      1   1405     9296                 14.4
+##  8      2   2101   361873                 13.3
+##  9      2   2102    13467                 13.4
+## 10      2   2103    10186                 13.9
+## # ... with 336 more rows</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>comunas <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">inner_join</span>(personas_resumen, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;CODIGO&quot;</span> =<span class="st"> &quot;comuna&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(casen_comuna, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;CODIGO&quot;</span> =<span class="st"> &quot;comuna&quot;</span>))
+
+data</code></pre></div>
+<pre><code>## # A tibble: 324 x 6
+##    CODIGO COMUNA        region personas escolaridad_prom~ ingreso_promedio
+##     &lt;dbl&gt; &lt;chr&gt;          &lt;int&gt;    &lt;dbl&gt;             &lt;dbl&gt;            &lt;dbl&gt;
+##  1  15101 Arica             15   221364              12.9          401776.
+##  2  15102 Camarones         15     1255              11.4          313710.
+##  3  15201 Putre             15     2765              12.1          326106.
+##  4   1101 Iquique            1   191468              12.6          550515.
+##  5   1402 Camiña             1     1250              15.2          259875 
+##  6   1404 Huara              1     2730              13.1          316227.
+##  7   1405 Pica               1     9296              14.4          425864.
+##  8   1401 Pozo Almonte       1    15711              11.8          423393.
+##  9   1107 Alto Hospicio      1   108375              12.2          418036.
+## 10   2101 Antofagasta        2   361873              13.3          535312.
+## # ... with 314 more rows</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">region =</span> <span class="kw">factor</span>(region),
+    <span class="dt">region2 =</span> <span class="kw">fct_lump</span>(region, <span class="dt">n =</span> <span class="dv">8</span>)
+    )
+
+data</code></pre></div>
+<pre><code>## # A tibble: 324 x 7
+##    CODIGO COMUNA region personas escolaridad_pro~ ingreso_promedio region2
+##     &lt;dbl&gt; &lt;chr&gt;  &lt;fct&gt;     &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;  
+##  1  15101 Arica  15       221364             12.9          401776. Other  
+##  2  15102 Camar~ 15         1255             11.4          313710. Other  
+##  3  15201 Putre  15         2765             12.1          326106. Other  
+##  4   1101 Iquiq~ 1        191468             12.6          550515. Other  
+##  5   1402 Camiña 1          1250             15.2          259875  Other  
+##  6   1404 Huara  1          2730             13.1          316227. Other  
+##  7   1405 Pica   1          9296             14.4          425864. Other  
+##  8   1401 Pozo ~ 1         15711             11.8          423393. Other  
+##  9   1107 Alto ~ 1        108375             12.2          418036. Other  
+## 10   2101 Antof~ 2        361873             13.3          535312. Other  
+## # ... with 314 more rows</code></pre>
+</section></section>
+<section><section id="visualizar" class="titleslide slide level1 center"><h1>Visualizar</h1></section><section class="slide level2">
+
+<ul>
+<li class="fragment">Visualización: Principal caraterística</li>
+<li class="fragment">Paquete <code>ggplot2</code>. Muy poderoso.</li>
+<li class="fragment">Existen librerías interactivas</li>
+</ul>
+</section><section class="slide level2">
+
+<p>Graficar ingreso promedio y escolaridad promedio por comuna</p>
+<div id="left">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio, <span class="dt">y =</span> escolaridad_promedio))</code></pre></div>
+</div>
+<div id="right">
+<p><img src="presentacion_files/figure-revealjs/unnamed-chunk-13-1.svg" width="576" /></p>
+</div>
+</section><section class="slide level2">
+
+<p>Agregamos más información</p>
+<div id="left">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio, <span class="dt">y =</span> escolaridad_promedio,
+                 <span class="dt">color =</span> region, <span class="dt">size=</span> personas))</code></pre></div>
+</div>
+<div id="right">
+<p><img src="presentacion_files/figure-revealjs/unnamed-chunk-15-1.svg" width="576" /></p>
+</div>
+</section></section>
+<section><section id="modelar" class="titleslide slide level1 center"><h1>Modelar</h1></section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio, <span class="dt">y =</span> escolaridad_promedio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> personas, <span class="dt">color =</span> region), <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans =</span> <span class="st">&quot;sqrt&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span>comma) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>region2)</code></pre></div>
+<p><img src="presentacion_files/figure-revealjs/unnamed-chunk-16-1.svg" width="576" /></p>
+</section><section class="slide level2">
+
+</section></section>
+<section><section id="comunicar" class="titleslide slide level1 center"><h1>Comunicar</h1></section></section>
+    </div>
+  </div>
+
+  <script src="libs/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="libs/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'libs/reveal.js-3.3.0.1/plugin/zoom-js/zoom.js', async: true },
+        ]
+      });
+    </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

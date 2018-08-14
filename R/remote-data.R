@@ -26,6 +26,10 @@ con <- dbConnect(
   password = "HFW9KYZBnEYr!"
 )
 
+DBI::dbListTables(con)
+
+DBI::dbListTables(con) %>% 
+  map(tbl, src = con)
 
 DBI::dbListTables(con) %>% 
   map(tbl, src = con) %>% 

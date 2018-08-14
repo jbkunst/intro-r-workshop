@@ -1,0 +1,217 @@
+---
+title: "<br>Introducción al Uso de R para Análisis Estadístico"
+output:
+  revealjs::revealjs_presentation:
+    self_contained: false
+    lib_dir: libs
+    reveal_plugins: ["zoom"]
+    mathjax: null
+    transition: fade
+    css: ["static/css/styles.css"]
+    incremental: true
+    center: false
+    theme: simple
+    fig_width: 6
+    fig_height: 3.5
+    reveal_options:
+      slideNumber: true
+      controls: false
+      mouseWheel: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE,
+  cache.path = ".cache/"
+)
+
+library(jbkmisc)
+library(ggplot2)
+theme_set(theme_jbk(base_family = "Roboto Condensed") + theme(legend.position = "none"))
+```
+
+----
+
+![Flujo de trabajo](static/imgs/datapipeline.png) 
+
+# Importar { .center }
+
+----
+
+Con R podemos acceder a información desde distintas fuentes:
+
+- Archivos de texto plano: txt, csv, tsv
+- Archivos MS excel, SPSS, SAS
+- Base de Datos: MySQL, SQLServer, PostgreSQL
+- APIs 
+
+----
+
+```{r}
+library(tidyverse)
+
+comunas <- read_csv("data/codigos_comunales.csv")
+comunas
+```
+
+```{r, include=FALSE}
+comunas <- comunas %>% mutate(COMUNA = as.character(COMUNA))
+```
+
+
+---- 
+
+```{r}
+library(haven)
+
+casen <- read_sav("data/casen/Casen 2015.sav")
+casen
+```
+
+----
+
+```{r, cache=FALSE}
+library(dplyr)
+library(DBI)
+
+con <- dbConnect(
+  RMySQL::MySQL(),
+  dbname = "censo2017",
+  host = "142.93.20.188", 
+  port = 3306,
+  user = "test",
+  password = "HFW9KYZBnEYr!"
+)
+
+dbListTables(con)
+```
+
+----
+
+```{r}
+personas <- tbl(con,"personas")
+personas
+```
+
+# Transformar { .center }
+
+----
+
+```{r}
+casen_comuna <- casen %>% 
+  mutate(comuna = as.numeric(comuna)) %>% 
+  group_by(comuna) %>% 
+  summarise(ingreso_promedio = mean(y1, na.rm = TRUE))
+casen_comuna
+```
+
+```{r, include=FALSE}
+rm(casen)
+gc()
+```
+
+----
+
+```{r}
+personas_resumen <- personas %>% 
+  group_by(region, comuna) %>% 
+  summarise(personas = n(), escolaridad_promedio = mean(ESCOLARIDAD)) %>% 
+  collect()
+
+personas_resumen
+```
+
+---- 
+
+```{r}
+data <- comunas %>%
+  inner_join(personas_resumen, by = c("CODIGO" = "comuna")) %>% 
+  inner_join(casen_comuna, by = c("CODIGO" = "comuna"))
+
+data
+```
+
+----
+
+```{r}
+data <- data %>% 
+  mutate(
+    region = factor(region),
+    region2 = fct_lump(region, n = 8)
+    )
+
+data
+```
+
+
+# Visualizar { .center }
+
+---- 
+
+- Visualización: Principal caraterística 
+- Paquete `ggplot2`. Muy poderoso.
+- Existen librerías interactivas
+
+----
+
+Graficar ingreso promedio y escolaridad promedio por comuna
+
+<div id="left">
+```{r results='hide'}
+p <- ggplot(data) +
+  geom_point(aes(x = ingreso_promedio, y = escolaridad_promedio))
+```
+</div>
+<div id="right">
+```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+p
+```
+</div>
+
+
+----
+
+Agregamos más información
+
+<div id="left">
+```{r results='hide'}
+p <- ggplot(data) +
+  geom_point(aes(x = ingreso_promedio, y = escolaridad_promedio,
+                 color = region, size= personas))
+```
+</div>
+<div id="right">
+```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+p
+```
+</div>
+
+
+
+# Modelar { .center }
+
+----
+
+```{r}
+ggplot(data, aes(x = ingreso_promedio, y = escolaridad_promedio)) +
+  geom_point(aes(size = personas, color = region), alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE) + 
+  scale_x_continuous(trans = "sqrt", labels = scales::comma) +
+  facet_wrap(~ region2)
+```
+
+
+---- 
+
+```{r}
+
+```
+
+
+
+# Comunicar { .center }
