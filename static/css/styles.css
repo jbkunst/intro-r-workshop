@@ -64,7 +64,7 @@ body {
 .reveal section ul li ul {padding-top: 0em; padding-bottom: 0em;}
 
 /* code */
-.reveal code { font-family: "Fira Mono"; font-size: 85%;}
+.reveal code { font-family: "Fira Mono"; font-size: 80%;}
 
 /* img */
 .reveal section img {

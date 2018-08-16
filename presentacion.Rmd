@@ -29,28 +29,29 @@ knitr::opts_chunk$set(
   cache = TRUE,
   cache.path = ".cache/",
   fig.path = "static/imgs/slides/",
-  fig.width = 10,
-  fig.height = 6
+  fig.width = 11,
+  fig.height = 5
 )
 
 library(jbkmisc)
 library(ggplot2)
-theme_set(
-  theme_jbk(
-    base_family = "Roboto Condensed",
-    plot_margin = margin(5, 5, 5, 5)
-    ) + 
-    theme(
-      legend.position = "none",
-      )
-  )
+
+theme_pres <- theme_jbk(
+  base_family = "Roboto Condensed",
+  plot_margin = margin(5, 5, 5, 5)
+  ) + 
+  theme(
+    legend.position = "none",
+    )
+
+theme_set(theme_pres)
 ```
 
 ----
 
 ![Flujo de trabajo](static/imgs/datapipeline.png) 
 
-# Importar { .center }
+# Importar { .center .white data-background=https://creativevibes.org/wp-content/uploads/2017/05/Start-The-Journey-Images.jpg}
 
 ----
 
@@ -69,11 +70,6 @@ library(tidyverse)
 comunas <- read_csv("data/codigos_comunales.csv")
 comunas
 ```
-
-```{r, include=FALSE}
-comunas <- comunas %>% mutate(COMUNA = as.character(COMUNA))
-```
-
 
 ---- 
 
@@ -139,6 +135,10 @@ personas_resumen
 
 ---- 
 
+```{r, include=FALSE}
+comunas <- comunas %>% mutate(COMUNA = as.character(COMUNA))
+```
+
 ```{r}
 data <- comunas %>%
   inner_join(personas_resumen, by = c("CODIGO" = "comuna")) %>% 
@@ -174,7 +174,8 @@ Graficar ingreso promedio y escolaridad promedio por comuna
 <div id="left">
 ```{r results='hide'}
 p <- ggplot(data) +
-  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio))
+  geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
+                 label = COMUNA))
 ```
 </div>
 <div id="right">
@@ -192,7 +193,7 @@ Agregamos más información
 ```{r results='hide'}
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
-                 color = region, size= personas))
+                 label = COMUNA, color = region, size= personas))
 ```
 </div>
 <div id="right">
@@ -209,7 +210,8 @@ Detalles
 ```{r results='hide'}
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
-                 color = region, size= personas), alpha = 0.75) +
+                 label = COMUNA, color = region, size= personas),
+             alpha = 0.75) +
   scale_color_viridis_d(option = "magma") +
   scale_x_continuous(trans = "log", labels = scales::comma,
                      breaks = seq(0, 1e3, by = 250))
@@ -230,7 +232,8 @@ Aquí *parte* la magia
 ```{r results='hide'}
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
-                 color = region, size= personas), alpha = 0.75) +
+                 label = COMUNA, color = region, size= personas),
+             alpha = 0.75) +
   scale_color_viridis_d(option = "magma") +
   scale_x_continuous(trans = "log", labels = scales::comma,
                      breaks = seq(0, 1e3, by = 250)) +
@@ -251,7 +254,8 @@ Aquí *sigue* la magia
 ```{r results='hide'}
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
-                 color = region, size= personas), alpha = 0.75) +
+                 label = COMUNA, color = region, size= personas),
+             alpha = 0.75) +
   scale_color_viridis_d(option = "magma") +
   scale_x_continuous(trans = "log", labels = scales::comma,
                      breaks = seq(0, 1e3, by = 250)) +
@@ -268,9 +272,172 @@ p
 
 ----
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=7}
 p
 ```
+
+----
+
+**Importar** + Transformar + Visualizar
+
+```{r}
+library(sf)
+
+dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
+dgeo
+```
+
+```{r, echo=FALSE}
+theme_set(theme_gray())
+dgeo <- dgeo %>% mutate(COMUNA = as.numeric(COMUNA))
+dgeo <- st_transform(dgeo, crs = 32719)
+```
+
+---- 
+
+Importar + Transformar + **Visualizar**
+
+```{r}
+ggplot() +
+  geom_sf(data = dgeo) 
+```
+
+----
+
+Importar + **Transformar** + Visualizar
+
+```{r, echo=FALSE}
+classint <- function(x, labels = NULL, ...) {
+  cut(x, breaks = classIntervals(x, ...)$brks, include.lowest = TRUE, labels = labels)
+}
+```
+
+
+```{r}
+library(classInt)
+niveles <- c("bajo", "medio", "alto")
+
+dgeo <- dgeo %>% 
+  left_join(data, by = c("COMUNA" = "CODIGO")) %>% 
+  mutate(
+    escolaridad = classint(escolaridad_promedio, n = 3, style = "kmeans", labels = niveles), 
+    ingreso = classint(ingreso_promedio_mm, n = 3, style = "kmeans", labels = niveles)
+  )
+
+glimpse(dgeo)
+```
+
+----
+
+Importar + Transformar + **Visualizar**
+
+```{r}
+p2 <- ggplot() +
+  geom_sf(data = select(dgeo, COMUNA, geometry),
+          fill = "gray95", color = "gray80", size = 0.1) +
+  geom_sf(data = dgeo, fill = "darkred", color = "gray80", size = 0.1) +
+  scale_fill_viridis_d() +
+  facet_grid(ingreso ~ escolaridad) +
+  theme_minimal() 
+```
+
+----
+
+Importar + Transformar + Visualizar
+
+```{r, echo=FALSE, fig.height=7}
+p2
+```
+
+# Modelar { .center }
+
+----
+
+Recordemos
+
+```{r, echo=FALSE, fig.height=7}
+p
+```
+
+----
+
+Recordemos
+
+```{r}
+data
+```
+
+----
+
+Supongamos que quisieramos saber el efecto de la escolaridad por ingreso en comunas
+por cada region
+
+```{r}
+datag <- data %>% 
+  group_by(region2) %>% 
+  nest()
+
+datag
+```
+
+----
+
+```{r}
+library(broom)
+
+datag <- datag %>% 
+  mutate(
+    modelo = map(data, lm, formula = escolaridad_promedio ~ ingreso_promedio_mm),
+    parametros = map(modelo, tidy)
+  )
+
+datag
+```
+
+----
+
+Volver al mundo _normal_
+
+```{r}
+dmods <- datag %>% 
+  select(region2, parametros) %>% 
+  unnest()
+
+dmods
+```
+
+----
+
+Transformar
+
+```{r}
+dmods <- dmods %>% 
+  select(region2, term, estimate) %>% 
+  spread(term, estimate) 
+
+dmods
+```
+
+---- 
+
+Visualizar
+
+```{r}
+library(ggrepel)
+
+p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
+  geom_point(size = 7, alpha = 0.6, color = "gray60") +
+  geom_text_repel(aes(label = region2), force = 20) +
+  scale_x_continuous(limits = c(0, NA))
+```
+
+----
+
+```{r, echo=FALSE, fig.height=7}
+p3
+```
+
+# Comunicar { .center }
 
 ----
 
@@ -278,26 +445,10 @@ p
 widgetframe::frameWidget(plotly::ggplotly(p), height = 800)
 ```
 
-
-# Modelar { .center }
+# Gracias
 
 ----
 
-```{r}
-ggplot(data, aes(x = ingreso_promedio_mm, y = escolaridad_promedio)) +
-  geom_point(aes(size = personas, color = region), alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE) + 
-  scale_x_continuous(trans = "sqrt", labels = scales::comma) +
-  facet_wrap(~ region2)
-```
+Información Relevante:
 
-
----- 
-
-```{r}
-
-```
-
-
-
-# Comunicar { .center }
+- Url shapes https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile

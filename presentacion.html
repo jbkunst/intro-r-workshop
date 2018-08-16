@@ -496,7 +496,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 
 <p><img src="static/imgs/datapipeline.png" alt="Flujo de trabajo" /></p>
 </section>
-<section><section id="importar" class="titleslide slide level1 center"><h1>Importar</h1></section><section class="slide level2">
+<section><section id="importar" class="titleslide slide level1 center white" data-background="https://creativevibes.org/wp-content/uploads/2017/05/Start-The-Journey-Images.jpg"><h1>Importar</h1></section><section class="slide level2">
 
 <p>Con R podemos acceder a información desde distintas fuentes:</p>
 <ul>
@@ -715,7 +715,8 @@ data</code></pre></div>
 <p>Graficar ingreso promedio y escolaridad promedio por comuna</p>
 <div id="left">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio))</code></pre></div>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio,
+                 <span class="dt">label =</span> COMUNA))</code></pre></div>
 </div>
 <div id="right">
 <p><img src="static/imgs/slides/unnamed-chunk-13-1.svg" width="576" /></p>
@@ -726,7 +727,7 @@ data</code></pre></div>
 <div id="left">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio,
-                 <span class="dt">color =</span> region, <span class="dt">size=</span> personas))</code></pre></div>
+                 <span class="dt">label =</span> COMUNA, <span class="dt">color =</span> region, <span class="dt">size=</span> personas))</code></pre></div>
 </div>
 <div id="right">
 <p><img src="static/imgs/slides/unnamed-chunk-15-1.svg" width="576" /></p>
@@ -737,7 +738,8 @@ data</code></pre></div>
 <div id="left">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio,
-                 <span class="dt">color =</span> region, <span class="dt">size=</span> personas), <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
+                 <span class="dt">label =</span> COMUNA, <span class="dt">color =</span> region, <span class="dt">size=</span> personas),
+             <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_viridis_d</span>(<span class="dt">option =</span> <span class="st">&quot;magma&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans =</span> <span class="st">&quot;log&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span>comma,
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">1e3</span>, <span class="dt">by =</span> <span class="dv">250</span>))</code></pre></div>
@@ -751,7 +753,8 @@ data</code></pre></div>
 <div id="left">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio,
-                 <span class="dt">color =</span> region, <span class="dt">size=</span> personas), <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
+                 <span class="dt">label =</span> COMUNA, <span class="dt">color =</span> region, <span class="dt">size=</span> personas),
+             <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_viridis_d</span>(<span class="dt">option =</span> <span class="st">&quot;magma&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans =</span> <span class="st">&quot;log&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span>comma,
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">1e3</span>, <span class="dt">by =</span> <span class="dv">250</span>)) <span class="op">+</span>
@@ -766,7 +769,8 @@ data</code></pre></div>
 <div id="left">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(data) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio,
-                 <span class="dt">color =</span> region, <span class="dt">size=</span> personas), <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
+                 <span class="dt">label =</span> COMUNA, <span class="dt">color =</span> region, <span class="dt">size=</span> personas),
+             <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_viridis_d</span>(<span class="dt">option =</span> <span class="st">&quot;magma&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans =</span> <span class="st">&quot;log&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span>comma,
                      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">1e3</span>, <span class="dt">by =</span> <span class="dv">250</span>)) <span class="op">+</span>
@@ -779,24 +783,225 @@ data</code></pre></div>
 </div>
 </section><section class="slide level2">
 
-<p><img src="static/imgs/slides/unnamed-chunk-22-1.svg" width="960" /></p>
+<p><img src="static/imgs/slides/unnamed-chunk-22-1.svg" width="1056" /></p>
 </section><section class="slide level2">
 
-<div id="htmlwidget-58049ca62a5ed72dbf1f" style="width:100%;height:800px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-58049ca62a5ed72dbf1f">{"x":{"url":"static/imgs/slides//widgets/widget_unnamed-chunk-23.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p><strong>Importar</strong> + Transformar + Visualizar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)
+
+dgeo &lt;-<span class="st"> </span><span class="kw">read_sf</span>(<span class="st">&quot;data/R13/Comuna.shp&quot;</span>, <span class="dt">layer =</span> <span class="st">&quot;Comuna&quot;</span>)
+dgeo</code></pre></div>
+<pre><code>## Simple feature collection with 52 features and 6 fields
+## geometry type:  POLYGON
+## dimension:      XY
+## bbox:           xmin: -71.71523 ymin: -34.29093 xmax: -69.76999 ymax: -32.92194
+## epsg (SRID):    NA
+## proj4string:    +proj=longlat +ellps=GRS80 +no_defs
+## # A tibble: 52 x 7
+##    REGION PROVINCIA COMUNA DESC_REGIO               DESC_PROVI DESC_COMUN 
+##    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;                    &lt;chr&gt;      &lt;chr&gt;      
+##  1 13     131       13114  REGIÓN METROPOLITANA DE~ SANTIAGO   LAS CONDES 
+##  2 13     131       13115  REGIÓN METROPOLITANA DE~ SANTIAGO   LO BARNECH~
+##  3 13     131       13132  REGIÓN METROPOLITANA DE~ SANTIAGO   VITACURA   
+##  4 13     131       13107  REGIÓN METROPOLITANA DE~ SANTIAGO   HUECHURABA 
+##  5 13     131       13124  REGIÓN METROPOLITANA DE~ SANTIAGO   PUDAHUEL   
+##  6 13     131       13125  REGIÓN METROPOLITANA DE~ SANTIAGO   QUILICURA  
+##  7 13     131       13102  REGIÓN METROPOLITANA DE~ SANTIAGO   CERRILLOS  
+##  8 13     131       13116  REGIÓN METROPOLITANA DE~ SANTIAGO   LO ESPEJO  
+##  9 13     131       13119  REGIÓN METROPOLITANA DE~ SANTIAGO   MAIPÚ      
+## 10 13     131       13105  REGIÓN METROPOLITANA DE~ SANTIAGO   EL BOSQUE  
+## # ... with 42 more rows, and 1 more variable: geometry &lt;POLYGON [Â°]&gt;</code></pre>
+</section><section class="slide level2">
+
+<p>Importar + Transformar + <strong>Visualizar</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> dgeo) </code></pre></div>
+<p><img src="static/imgs/slides/unnamed-chunk-25-1.svg" width="1056" /></p>
+</section><section class="slide level2">
+
+<p>Importar + <strong>Transformar</strong> + Visualizar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(classInt)
+niveles &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;bajo&quot;</span>, <span class="st">&quot;medio&quot;</span>, <span class="st">&quot;alto&quot;</span>)
+
+dgeo &lt;-<span class="st"> </span>dgeo <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">left_join</span>(data, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;COMUNA&quot;</span> =<span class="st"> &quot;CODIGO&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">escolaridad =</span> <span class="kw">classint</span>(escolaridad_promedio, <span class="dt">n =</span> <span class="dv">3</span>, <span class="dt">style =</span> <span class="st">&quot;kmeans&quot;</span>, <span class="dt">labels =</span> niveles), 
+    <span class="dt">ingreso =</span> <span class="kw">classint</span>(ingreso_promedio_mm, <span class="dt">n =</span> <span class="dv">3</span>, <span class="dt">style =</span> <span class="st">&quot;kmeans&quot;</span>, <span class="dt">labels =</span> niveles)
+  )
+
+<span class="kw">glimpse</span>(dgeo)</code></pre></div>
+<pre><code>## Observations: 52
+## Variables: 15
+## $ REGION               &lt;chr&gt; &quot;13&quot;, &quot;13&quot;, &quot;13&quot;, &quot;13&quot;, &quot;13&quot;, &quot;13&quot;, &quot;13&quot;,...
+## $ PROVINCIA            &lt;chr&gt; &quot;131&quot;, &quot;131&quot;, &quot;131&quot;, &quot;131&quot;, &quot;131&quot;, &quot;131&quot;,...
+## $ COMUNA               &lt;dbl&gt; 13114, 13115, 13132, 13107, 13124, 13125,...
+## $ DESC_REGIO           &lt;chr&gt; &quot;REGIÓN METROPOLITANA DE SANTIAGO&quot;, &quot;REGI...
+## $ DESC_PROVI           &lt;chr&gt; &quot;SANTIAGO&quot;, &quot;SANTIAGO&quot;, &quot;SANTIAGO&quot;, &quot;SANT...
+## $ DESC_COMUN           &lt;chr&gt; &quot;LAS CONDES&quot;, &quot;LO BARNECHEA&quot;, &quot;VITACURA&quot;,...
+## $ COMUNA.y             &lt;chr&gt; &quot;Las Condes&quot;, &quot;Lo Barnechea&quot;, &quot;Vitacura&quot;,...
+## $ region               &lt;fct&gt; 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 1...
+## $ personas             &lt;dbl&gt; 294838, 105833, 85384, 98671, 230293, 210...
+## $ escolaridad_promedio &lt;dbl&gt; 15.3671, 12.9681, 14.8505, 12.9317, 12.38...
+## $ ingreso_promedio_mm  &lt;dbl&gt; 1207.6004, 961.6909, 1388.5933, 366.3252,...
+## $ region2              &lt;fct&gt; 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 1...
+## $ escolaridad          &lt;fct&gt; alto, bajo, medio, bajo, bajo, bajo, bajo...
+## $ ingreso              &lt;fct&gt; alto, alto, alto, bajo, medio, medio, baj...
+## $ geometry             &lt;POLYGON [m]&gt; POLYGON ((362355.2 6307345,..., P...</code></pre>
+</section><section class="slide level2">
+
+<p>Importar + Transformar + <strong>Visualizar</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> <span class="kw">select</span>(dgeo, COMUNA, geometry),
+          <span class="dt">fill =</span> <span class="st">&quot;gray95&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> dgeo, <span class="dt">fill =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_viridis_d</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(ingreso <span class="op">~</span><span class="st"> </span>escolaridad) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>() </code></pre></div>
+</section><section class="slide level2">
+
+<p>Importar + Transformar + Visualizar</p>
+<p><img src="static/imgs/slides/unnamed-chunk-29-1.svg" width="1056" /></p>
 </section></section>
 <section><section id="modelar" class="titleslide slide level1 center"><h1>Modelar</h1></section><section class="slide level2">
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> ingreso_promedio_mm, <span class="dt">y =</span> escolaridad_promedio)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> personas, <span class="dt">color =</span> region), <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans =</span> <span class="st">&quot;sqrt&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span>comma) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>region2)</code></pre></div>
-<p><img src="static/imgs/slides/unnamed-chunk-24-1.svg" width="960" /></p>
+<p>Recordemos</p>
+<p><img src="static/imgs/slides/unnamed-chunk-30-1.svg" width="1056" /></p>
 </section><section class="slide level2">
 
+<p>Recordemos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data</code></pre></div>
+<pre><code>## # A tibble: 324 x 7
+##    CODIGO COMUNA region personas escolaridad_pro~ ingreso_promedi~ region2
+##     &lt;dbl&gt; &lt;chr&gt;  &lt;fct&gt;     &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;fct&gt;  
+##  1  15101 Arica  15       221364             12.9             402. Other  
+##  2  15102 Camar~ 15         1255             11.4             314. Other  
+##  3  15201 Putre  15         2765             12.1             326. Other  
+##  4   1101 Iquiq~ 1        191468             12.6             551. Other  
+##  5   1402 Camiña 1          1250             15.2             260. Other  
+##  6   1404 Huara  1          2730             13.1             316. Other  
+##  7   1405 Pica   1          9296             14.4             426. Other  
+##  8   1401 Pozo ~ 1         15711             11.8             423. Other  
+##  9   1107 Alto ~ 1        108375             12.2             418. Other  
+## 10   2101 Antof~ 2        361873             13.3             535. Other  
+## # ... with 314 more rows</code></pre>
+</section><section class="slide level2">
+
+<p>Supongamos que quisieramos saber el efecto de la escolaridad por ingreso en comunas por cada region</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datag &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(region2) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">nest</span>()
+
+datag</code></pre></div>
+<pre><code>## # A tibble: 9 x 2
+##   region2 data             
+##   &lt;fct&gt;   &lt;list&gt;           
+## 1 Other   &lt;tibble [47 x 6]&gt;
+## 2 4       &lt;tibble [15 x 6]&gt;
+## 3 5       &lt;tibble [36 x 6]&gt;
+## 4 6       &lt;tibble [33 x 6]&gt;
+## 5 7       &lt;tibble [30 x 6]&gt;
+## 6 8       &lt;tibble [54 x 6]&gt;
+## 7 9       &lt;tibble [32 x 6]&gt;
+## 8 10      &lt;tibble [25 x 6]&gt;
+## 9 13      &lt;tibble [52 x 6]&gt;</code></pre>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(broom)
+
+datag &lt;-<span class="st"> </span>datag <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">modelo =</span> <span class="kw">map</span>(data, lm, <span class="dt">formula =</span> escolaridad_promedio <span class="op">~</span><span class="st"> </span>ingreso_promedio_mm),
+    <span class="dt">parametros =</span> <span class="kw">map</span>(modelo, tidy)
+  )
+
+datag</code></pre></div>
+<pre><code>## # A tibble: 9 x 4
+##   region2 data              modelo   parametros          
+##   &lt;fct&gt;   &lt;list&gt;            &lt;list&gt;   &lt;list&gt;              
+## 1 Other   &lt;tibble [47 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 2 4       &lt;tibble [15 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 3 5       &lt;tibble [36 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 4 6       &lt;tibble [33 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 5 7       &lt;tibble [30 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 6 8       &lt;tibble [54 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 7 9       &lt;tibble [32 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 8 10      &lt;tibble [25 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;
+## 9 13      &lt;tibble [52 x 6]&gt; &lt;S3: lm&gt; &lt;data.frame [2 x 5]&gt;</code></pre>
+</section><section class="slide level2">
+
+<p>Volver al mundo <em>normal</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dmods &lt;-<span class="st"> </span>datag <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(region2, parametros) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>()
+
+dmods</code></pre></div>
+<pre><code>## # A tibble: 18 x 6
+##    region2 term                 estimate std.error statistic  p.value
+##    &lt;fct&gt;   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 Other   (Intercept)         11.5       0.798       14.4   1.85e-18
+##  2 Other   ingreso_promedio_mm  0.00151   0.00192      0.786 4.36e- 1
+##  3 4       (Intercept)          9.05      1.65         5.47  1.08e- 4
+##  4 4       ingreso_promedio_mm  0.00599   0.00507      1.18  2.59e- 1
+##  5 5       (Intercept)          9.93      0.870       11.4   3.53e-13
+##  6 5       ingreso_promedio_mm  0.00698   0.00261      2.67  1.14e- 2
+##  7 6       (Intercept)          8.11      1.00         8.07  4.08e- 9
+##  8 6       ingreso_promedio_mm  0.00882   0.00331      2.66  1.22e- 2
+##  9 7       (Intercept)          8.08      0.826        9.77  1.59e-10
+## 10 7       ingreso_promedio_mm  0.00871   0.00302      2.88  7.46e- 3
+## 11 8       (Intercept)          9.30      0.598       15.5   3.40e-21
+## 12 8       ingreso_promedio_mm  0.00438   0.00191      2.30  2.58e- 2
+## 13 9       (Intercept)          8.63      1.54         5.59  4.36e- 6
+## 14 9       ingreso_promedio_mm  0.00859   0.00515      1.67  1.06e- 1
+## 15 10      (Intercept)         10.6       1.45         7.31  1.93e- 7
+## 16 10      ingreso_promedio_mm  0.000535  0.00468      0.114 9.10e- 1
+## 17 13      (Intercept)         11.6       0.270       43.0   3.83e-41
+## 18 13      ingreso_promedio_mm  0.00279   0.000514     5.44  1.61e- 6</code></pre>
+</section><section class="slide level2">
+
+<p>Transformar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dmods &lt;-<span class="st"> </span>dmods <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(region2, term, estimate) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(term, estimate) 
+
+dmods</code></pre></div>
+<pre><code>## # A tibble: 9 x 3
+##   region2 `(Intercept)` ingreso_promedio_mm
+##   &lt;fct&gt;           &lt;dbl&gt;               &lt;dbl&gt;
+## 1 4                9.05            0.00599 
+## 2 5                9.93            0.00698 
+## 3 6                8.11            0.00882 
+## 4 7                8.08            0.00871 
+## 5 8                9.30            0.00438 
+## 6 9                8.63            0.00859 
+## 7 10              10.6             0.000535
+## 8 13              11.6             0.00279 
+## 9 Other           11.5             0.00151</code></pre>
+</section><section class="slide level2">
+
+<p>Visualizar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggrepel)
+
+p3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dmods, <span class="kw">aes</span>(ingreso_promedio_mm, <span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">7</span>, <span class="dt">alpha =</span> <span class="fl">0.6</span>, <span class="dt">color =</span> <span class="st">&quot;gray60&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> region2), <span class="dt">force =</span> <span class="dv">20</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</code></pre></div>
+</section><section class="slide level2">
+
+<p><img src="static/imgs/slides/unnamed-chunk-37-1.svg" width="1056" /></p>
 </section></section>
-<section><section id="comunicar" class="titleslide slide level1 center"><h1>Comunicar</h1></section></section>
+<section><section id="comunicar" class="titleslide slide level1 center"><h1>Comunicar</h1></section><section class="slide level2">
+
+<div id="htmlwidget-7113a963d626587d265b" style="width:100%;height:800px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7113a963d626587d265b">{"x":{"url":"static/imgs/slides//widgets/widget_unnamed-chunk-38.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</section></section>
+<section><section id="gracias" class="titleslide slide level1"><h1>Gracias</h1></section><section class="slide level2">
+
+<p>Información Relevante:</p>
+<ul>
+<li class="fragment">Url shapes <a href="https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile" class="uri">https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile</a></li>
+</ul>
+</section></section>
     </div>
   </div>
 
