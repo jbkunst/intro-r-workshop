@@ -47,3 +47,40 @@ ggplot(casen) + geom_histogram(aes(o10))
 casen %>% count(y1, sort = TRUE)
 ggplot(casen) + geom_histogram(aes(y1)) + scale_x_log10()
 casen$y1 %>% summary()
+
+
+casen <- casen %>%
+  # head(10) %>% 
+  select(-folio, -o, -id_vivienda, -provincia, -zona, -hogar)
+
+# casen num  
+casen_num <- casen %>% 
+  group_by(region, comuna) %>% 
+  summarise_if(negate(is.labelled), mean, na.rm = TRUE)
+
+# casen cat
+casen_cat <- ""
+
+casen %>%
+  head(200) %>% 
+  group_by(region, comuna) %>% 
+  select(-ends_with("esp")) %>% 
+  select(matches("^[a-z][1-3][a-z]?"))
+  select_if(is.labelled) %>% 
+  select_if(negate(is.character)) %>% 
+  mutate_if(is.labelled, as_factor) %>%
+  mutate_if(is.factor, fct_explicit_na, na_level = "(NA)") %>% 
+  mutate_if(is.factor, fct_lump)
+
+casen_cat <- casen_cat %>% 
+  ungroup() %>% 
+  # sample_n(2000) %>% 
+  gather(key, value, -region, -comuna) %>% 
+  count(region, comuna, key, value) %>% 
+  group_by(region, comuna, key) %>% 
+  mutate(n = n/sum(n)) %>% 
+  ungroup() %>% 
+  unite("key_value", c("key", "value")) %>% 
+  spread(key_value, n) %>% 
+  mutate_all(replace_na, 0)
+

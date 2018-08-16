@@ -1,5 +1,5 @@
 ---
-title: "<br>Introducción al Uso de R para Análisis Estadístico"
+title: false
 output:
   revealjs::revealjs_presentation:
     self_contained: false
@@ -17,9 +17,13 @@ output:
       slideNumber: true
       controls: false
       mouseWheel: false
+      minScale: 1.0
+      maxScale: 1.0
 editor_options: 
   chunk_output_type: console
 ---
+
+# Introducción al Uso de R para Análisis Estadístico
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
@@ -290,7 +294,7 @@ dgeo
 ```{r, echo=FALSE}
 theme_set(theme_gray())
 dgeo <- dgeo %>% mutate(COMUNA = as.numeric(COMUNA))
-dgeo <- st_transform(dgeo, crs = 32719)
+# dgeo <- st_transform(dgeo, crs = 32719)
 ```
 
 ---- 
@@ -441,9 +445,75 @@ p3
 
 ----
 
-```{r, echo=FALSE}
-widgetframe::frameWidget(plotly::ggplotly(p), height = 800)
+Comunicar no es solo
+
+- Presentar un par de números
+- Mostrar un gráfico 
+
+Es
+
+- Atraer al receptor, y facilitarle la lectura
+- Contar la historía, dar razones
+- ...
+
+---- 
+
+R poseee muchas otras formas de comunicar:
+
+- Gráficos interactivos (htmlwidgets)
+- Creación de documentos (words, pdf, html)
+- Aplicaciones/dashboard webs 
+
+---- 
+
+```{r}
+library(highcharter)
+hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio, 
+                            group = region2, size = personas)) %>% 
+  hc_add_theme(hc_theme_smpl())
 ```
+
+
+----
+
+```{r, echo=FALSE}
+p <- p + theme_gray()
+```
+
+
+```{r, echo=TRUE}
+library(plotly)
+ggplotly(p, height = 600) %>% 
+  config(displayModeBar = FALSE)
+```
+
+
+----
+
+```{r}
+library(leaflet)
+
+pal <- colorNumeric("viridis", NULL)
+
+l <- leaflet(dgeo) %>%
+  addTiles() %>%
+  addPolygons(
+    stroke = TRUE, color = "#DADADA", weight = 1,
+    smoothFactor = 0.3, fillOpacity = 0.75,
+    fillColor = ~pal(escolaridad_promedio),
+    label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
+    ) %>%
+  addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
+```
+
+----
+
+```{r, echo=FALSE}
+widgetframe::frameWidget(l, height = 700)
+```
+
+
+
 
 # Gracias
 
