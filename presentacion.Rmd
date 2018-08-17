@@ -55,7 +55,7 @@ theme_set(theme_pres)
 
 Antes de Empezar:
 
-- URL presentación http://bit.ly/intro-r-matpuc
+- URL presentación http://bit.ly/intro-r-puc
 - Código 
 
 ----
@@ -96,9 +96,10 @@ casen
 ```{r, cache=FALSE}
 library(dplyr)
 library(DBI)
+library(RMySQL)
 
 con <- dbConnect(
-  RMySQL::MySQL(),
+  drv = MySQL(),
   dbname = "censo2017",
   host = "142.93.20.188", 
   port = 3306,
@@ -472,15 +473,6 @@ R poseee muchas otras formas de comunicar:
 - Creación de documentos (words, pdf, html)
 - Aplicaciones/dashboard webs 
 
----- 
-
-```{r}
-library(highcharter)
-hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio,
-                            group = region2, size = personas)) %>%
-  hc_add_theme(hc_theme_smpl())
-```
-
 ----
 
 ```{r, echo=FALSE}
@@ -494,9 +486,36 @@ ggplotly(p, height = 600) %>%
   config(displayModeBar = FALSE)
 ```
 
+---- 
+
+```{r, results='hide'}
+# personas
+# data %>% 
+#   left_join(escolaridad_promedio)
+
+library(highcharter)
+
+hc <- hchart(data, type = "point",
+       hcaes(ingreso_promedio_mm, escolaridad_promedio,
+             group = region2, size = personas),
+       minSize = 1, maxSize = 15) %>%
+  hc_xAxis(type = "logarithmic") %>% 
+  hc_add_theme(hc_theme_smpl()) %>% 
+  hc_size(height = 700)
+
+hc
+```
+
 ----
 
-```{r}
+```{r, echo=FALSE, eval=FALSE}
+htmlwidgets::saveWidget(hc, file = "hc.html", libdir = "libs", selfcontained = FALSE)
+```
+<iframe src="hc.html" width=1200 height=700></iframe>
+
+----
+
+```{r, results='hide'}
 library(leaflet)
 
 pal <- colorNumeric("viridis", NULL)
@@ -510,6 +529,7 @@ l <- leaflet(dgeo) %>%
     label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
     ) %>%
   addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
+l
 ```
 
 ----
@@ -522,7 +542,7 @@ htmlwidgets::saveWidget(l, file = "l.html", libdir = "libs", selfcontained = FAL
 
 ----
 
-```{r}
+```{r, results='hide'}
 library(mapdeck)
 
 token <- "pk.eyJ1IjoiamJrdW5zdCIsImEiOiJjamt4OTRmZXMwNjhoM3FxamNya2pqNHZjIn0.2FkUN09oWHz0Jg07MzyKKA"
@@ -540,6 +560,7 @@ md <- mapdeck(token = token, height = 700,
     layer = "Comuna",
     elevation = "personas_cientos"
     )
+md
 ```
 
 ----
@@ -559,5 +580,11 @@ Información Relevante:
 
 ```{r, echo=FALSE, include=FALSE, cache=FALSE}
 knitr::purl("presentacion.Rmd", output = "R/codigo_presentacion.R", documentation = 1)
+lines <- readLines("R/codigo_presentacion.R")
+idx <- which(stringr::str_detect(lines, "^## "))
+
+lines <- lines[idx[2]:idx[length(idx)]]
+lines <- ifelse(stringr::str_detect(lines, "^## --"), "## ------------------------------------------------------------------------", lines)
+writeLines(lines, "R/codigo_presentacion.R")
 ```
 
