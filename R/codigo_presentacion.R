@@ -1,31 +1,4 @@
----
-title: false
-output:
-  revealjs::revealjs_presentation:
-    self_contained: false
-    lib_dir: libs
-    reveal_plugins: ["zoom"]
-    mathjax: null
-    transition: fade
-    css: ["static/css/styles.css"]
-    incremental: true
-    center: false
-    theme: simple
-    fig_width: 6
-    fig_height: 3.5
-    reveal_options:
-      slideNumber: true
-      controls: false
-      mouseWheel: false
-      minScale: 1.0
-      maxScale: 1.0
-editor_options: 
-  chunk_output_type: console
----
-
-# Introducción al Uso de R para Análisis Estadístico
-
-```{r, include=FALSE}
+## ---- include=FALSE------------------------------------------------------
 knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
@@ -49,51 +22,20 @@ theme_pres <- theme_jbk(
     )
 
 theme_set(theme_pres)
-```
 
-----
-
-Antes de Empezar:
-
-- URL presentación http://bit.ly/intro-r-matpuc
-- Código 
-
-----
-
-![Flujo de trabajo](static/imgs/datapipeline.png) 
-
-# Importar { .center .white data-background=https://creativevibes.org/wp-content/uploads/2017/05/Start-The-Journey-Images.jpg}
-
-----
-
-Con R podemos acceder a información desde distintas fuentes:
-
-- Archivos de texto plano: txt, csv, tsv
-- Archivos MS excel, SPSS, SAS
-- Base de Datos: MySQL, SQLServer, PostgreSQL
-- APIs 
-
-----
-
-```{r}
+## ------------------------------------------------------------------------
 library(tidyverse)
 
 comunas <- read_csv("data/codigos_comunales.csv")
 comunas
-```
 
----- 
-
-```{r}
+## ------------------------------------------------------------------------
 library(haven)
 
 casen <- read_sav("data/casen/Casen 2015.sav")
 casen
-```
 
-----
-
-```{r, cache=FALSE}
+## ---- cache=FALSE--------------------------------------------------------
 library(dplyr)
 library(DBI)
 
@@ -107,60 +49,41 @@ con <- dbConnect(
 )
 
 dbListTables(con)
-```
 
-----
-
-```{r}
+## ------------------------------------------------------------------------
 personas <- tbl(con,"personas")
 personas
-```
 
-# Transformar { .center }
-
-----
-
-```{r}
+## ------------------------------------------------------------------------
 casen_comuna <- casen %>% 
   mutate(comuna = as.numeric(comuna)) %>% 
   group_by(comuna) %>% 
   summarise(ingreso_promedio_mm = mean(y1, na.rm = TRUE)/1000)
 casen_comuna
-```
 
-```{r, include=FALSE}
+## ---- include=FALSE------------------------------------------------------
 rm(casen)
 gc()
-```
 
-----
-
-```{r}
+## ------------------------------------------------------------------------
 personas_resumen <- personas %>% 
   group_by(region, comuna) %>% 
   summarise(personas = n(), escolaridad_promedio = mean(ESCOLARIDAD)) %>% 
   collect()
 
 personas_resumen
-```
 
----- 
-
-```{r, include=FALSE}
+## ---- include=FALSE------------------------------------------------------
 comunas <- comunas %>% mutate(COMUNA = as.character(COMUNA))
-```
 
-```{r}
+## ------------------------------------------------------------------------
 data <- comunas %>%
   inner_join(personas_resumen, by = c("CODIGO" = "comuna")) %>% 
   inner_join(casen_comuna, by = c("CODIGO" = "comuna"))
 
 data
-```
 
-----
-
-```{r}
+## ------------------------------------------------------------------------
 data <- data %>% 
   mutate(
     region = factor(region),
@@ -168,57 +91,24 @@ data <- data %>%
     )
 
 data
-```
 
-# Visualizar { .center }
-
----- 
-
-- Visualización: Principal caraterística 
-- Paquete `ggplot2`. Muy poderoso.
-- Existen librerías interactivas
-
-----
-
-Graficar ingreso promedio y escolaridad promedio por comuna
-
-<div id="left">
-```{r results='hide'}
+## ----results='hide'------------------------------------------------------
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
                  label = COMUNA))
-```
-</div>
-<div id="right">
-```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+
+## ---- echo=FALSE, fig.width = 6, fig.height = 7--------------------------
 p
-```
-</div>
 
-
-----
-
-Agregamos más información
-
-<div id="left">
-```{r results='hide'}
+## ----results='hide'------------------------------------------------------
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
                  label = COMUNA, color = region, size= personas))
-```
-</div>
-<div id="right">
-```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+
+## ---- echo=FALSE, fig.width = 6, fig.height = 7--------------------------
 p
-```
-</div>
 
-----
-
-Detalles 
-
-<div id="left">
-```{r results='hide'}
+## ----results='hide'------------------------------------------------------
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
                  label = COMUNA, color = region, size= personas),
@@ -226,21 +116,11 @@ p <- ggplot(data) +
   scale_color_viridis_d(option = "magma") +
   scale_x_continuous(trans = "log", labels = scales::comma,
                      breaks = seq(0, 1e3, by = 250))
-```
-</div>
-<div id="right">
-```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+
+## ---- echo=FALSE, fig.width = 6, fig.height = 7--------------------------
 p
-```
-</div>
 
-
-----
-
-Aquí *parte* la magia 
-
-<div id="left">
-```{r results='hide'}
+## ----results='hide'------------------------------------------------------
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
                  label = COMUNA, color = region, size= personas),
@@ -249,20 +129,11 @@ p <- ggplot(data) +
   scale_x_continuous(trans = "log", labels = scales::comma,
                      breaks = seq(0, 1e3, by = 250)) +
   facet_wrap(~region2)
-```
-</div>
-<div id="right">
-```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+
+## ---- echo=FALSE, fig.width = 6, fig.height = 7--------------------------
 p
-```
-</div>
 
-----
-
-Aquí *sigue* la magia 
-
-<div id="left">
-```{r results='hide'}
+## ----results='hide'------------------------------------------------------
 p <- ggplot(data) +
   geom_point(aes(x = ingreso_promedio_mm, y = escolaridad_promedio,
                  label = COMUNA, color = region, size= personas),
@@ -273,59 +144,35 @@ p <- ggplot(data) +
   facet_wrap(~region2) +
   geom_smooth(aes(x = ingreso_promedio_mm, y = escolaridad_promedio),
               method = "lm", se = FALSE, color = "red", size = 1.2)
-```
-</div>
-<div id="right">
-```{r, echo=FALSE, fig.width = 6, fig.height = 7}
+
+## ---- echo=FALSE, fig.width = 6, fig.height = 7--------------------------
 p
-```
-</div>
 
-----
-
-```{r, echo=FALSE, fig.height=7}
+## ---- echo=FALSE, fig.height=7-------------------------------------------
 p
-```
 
-----
-
-**Importar** + Transformar + Visualizar
-
-```{r}
+## ------------------------------------------------------------------------
 library(sf)
 
 # dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
 dgeo <- st_read("data/R13/Comuna.shp", layer = "Comuna")
 dgeo
-```
 
-```{r, echo=FALSE}
+## ---- echo=FALSE---------------------------------------------------------
 theme_set(theme_gray())
 dgeo <- dgeo %>% mutate(COMUNA = as.numeric(as.character(COMUNA)))
 # dgeo <- st_transform(dgeo, crs = 32719)
-```
 
----- 
-
-Importar + Transformar + **Visualizar**
-
-```{r}
+## ------------------------------------------------------------------------
 ggplot() +
   geom_sf(data = dgeo) 
-```
 
-----
-
-Importar + **Transformar** + Visualizar
-
-```{r, echo=FALSE}
+## ---- echo=FALSE---------------------------------------------------------
 classint <- function(x, labels = NULL, ...) {
   cut(x, breaks = classIntervals(x, ...)$brks, include.lowest = TRUE, labels = labels)
 }
-```
 
-
-```{r}
+## ------------------------------------------------------------------------
 library(classInt)
 niveles <- c("bajo", "medio", "alto")
 
@@ -337,13 +184,8 @@ dgeo <- dgeo %>%
   )
 
 glimpse(dgeo)
-```
 
-----
-
-Importar + Transformar + **Visualizar**
-
-```{r}
+## ------------------------------------------------------------------------
 p2 <- ggplot() +
   geom_sf(data = select(dgeo, COMUNA, geometry),
           fill = "gray95", color = "gray80", size = 0.1) +
@@ -351,50 +193,24 @@ p2 <- ggplot() +
   scale_fill_viridis_d() +
   facet_grid(ingreso ~ escolaridad) +
   theme_minimal() 
-```
 
-----
-
-Importar + Transformar + **Visualizar**
-
-```{r, echo=FALSE, fig.height=7}
+## ---- echo=FALSE, fig.height=7-------------------------------------------
 p2
-```
 
-# Modelar { .center }
-
-----
-
-Recordemos
-
-```{r, echo=FALSE, fig.height=7}
+## ---- echo=FALSE, fig.height=7-------------------------------------------
 p
-```
 
-----
-
-Recordemos
-
-```{r}
+## ------------------------------------------------------------------------
 data
-```
 
-----
-
-Supongamos que quisieramos saber el efecto de la escolaridad por ingreso en comunas
-por cada region
-
-```{r}
+## ------------------------------------------------------------------------
 datag <- data %>% 
   group_by(region2) %>% 
   nest()
 
 datag
-```
 
-----
-
-```{r}
+## ------------------------------------------------------------------------
 library(broom)
 
 datag <- datag %>% 
@@ -404,99 +220,47 @@ datag <- datag %>%
   )
 
 datag
-```
 
-----
-
-Volver al mundo _normal_
-
-```{r}
+## ------------------------------------------------------------------------
 dmods <- datag %>% 
   select(region2, parametros) %>% 
   unnest()
 
 dmods
-```
 
-----
-
-Transformar
-
-```{r}
+## ------------------------------------------------------------------------
 dmods <- dmods %>% 
   select(region2, term, estimate) %>% 
   spread(term, estimate) 
 
 dmods
-```
 
----- 
-
-Visualizar
-
-```{r}
+## ------------------------------------------------------------------------
 library(ggrepel)
 
 p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
   geom_point(size = 7, alpha = 0.6, color = "gray60") +
   geom_text_repel(aes(label = region2), force = 20) +
   scale_x_continuous(limits = c(0, NA))
-```
 
-----
-
-```{r, echo=FALSE, fig.height=7}
+## ---- echo=FALSE, fig.height=7-------------------------------------------
 p3
-```
 
-# Comunicar { .center }
-
-----
-
-Comunicar no es solo
-
-- Presentar un par de números
-- Mostrar un gráfico 
-
-Es
-
-- Atraer al receptor, y facilitarle la lectura
-- Contar la historía, dar razones
-- ...
-
----- 
-
-R poseee muchas otras formas de comunicar:
-
-- Gráficos interactivos (htmlwidgets)
-- Creación de documentos (words, pdf, html)
-- Aplicaciones/dashboard webs 
-
----- 
-
-```{r}
+## ------------------------------------------------------------------------
 library(highcharter)
 hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio,
                             group = region2, size = personas)) %>%
   hc_add_theme(hc_theme_smpl())
-```
 
-----
-
-```{r, echo=FALSE}
+## ---- echo=FALSE---------------------------------------------------------
 p <- p + theme_gray()
-```
 
-
-```{r, echo=TRUE}
+## ---- echo=TRUE----------------------------------------------------------
 library(plotly)
 ggplotly(p, height = 600) %>%
   config(displayModeBar = FALSE)
-```
 
-----
-
-```{r}
+## ------------------------------------------------------------------------
 library(leaflet)
 
 pal <- colorNumeric("viridis", NULL)
@@ -510,19 +274,11 @@ l <- leaflet(dgeo) %>%
     label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
     ) %>%
   addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
-```
 
-----
+## ---- echo=FALSE, eval=FALSE---------------------------------------------
+## htmlwidgets::saveWidget(l, file = "l.html", libdir = "libs", selfcontained = FALSE)
 
-```{r, echo=FALSE, eval=FALSE}
-htmlwidgets::saveWidget(l, file = "l.html", libdir = "libs", selfcontained = FALSE)
-```
-<iframe src="l.html" width=1200 height=700></iframe>
-
-
-----
-
-```{r}
+## ------------------------------------------------------------------------
 library(mapdeck)
 
 token <- "pk.eyJ1IjoiamJrdW5zdCIsImEiOiJjamt4OTRmZXMwNjhoM3FxamNya2pqNHZjIn0.2FkUN09oWHz0Jg07MzyKKA"
@@ -540,24 +296,10 @@ md <- mapdeck(token = token, height = 700,
     layer = "Comuna",
     elevation = "personas_cientos"
     )
-```
 
-----
+## ---- echo=FALSE, eval=FALSE---------------------------------------------
+## htmlwidgets::saveWidget(md, file = "md.html", libdir = "libs", selfcontained = FALSE)
 
-```{r, echo=FALSE, eval=FALSE}
-htmlwidgets::saveWidget(md, file = "md.html", libdir = "libs", selfcontained = FALSE)
-```
-<iframe src="md.html" width=1200 height=700></iframe>
-
-# Gracias
-
-----
-
-Información Relevante:
-
-- Url shapes https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile
-
-```{r, echo=FALSE, include=FALSE, cache=FALSE}
+## ---- echo=FALSE, include=FALSE, cache=FALSE-----------------------------
 knitr::purl("presentacion.Rmd", output = "R/codigo_presentacion.R", documentation = 1)
-```
 
