@@ -467,10 +467,10 @@ R poseee muchas otras formas de comunicar:
 ---- 
 
 ```{r}
-library(highcharter)
-hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio, 
-                            group = region2, size = personas)) %>% 
-  hc_add_theme(hc_theme_smpl())
+# library(highcharter)
+# hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio, 
+#                             group = region2, size = personas)) %>% 
+#   hc_add_theme(hc_theme_smpl())
 ```
 
 
@@ -504,6 +504,7 @@ l <- leaflet(dgeo) %>%
     label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
     ) %>%
   addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
+l
 ```
 
 ----
@@ -511,7 +512,6 @@ l <- leaflet(dgeo) %>%
 ```{r, echo=FALSE}
 widgetframe::frameWidget(l, height = 700)
 ```
-
 
 
 
