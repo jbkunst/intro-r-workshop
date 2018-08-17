@@ -474,7 +474,6 @@ hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio,
   hc_add_theme(hc_theme_smpl())
 ```
 
-
 ----
 
 ```{r, echo=FALSE}
@@ -484,9 +483,34 @@ p <- p + theme_gray()
 
 ```{r, echo=TRUE}
 library(plotly)
-ggplotly(p, height = 600) %>% 
+ggplotly(p, height = 600) %>%
   config(displayModeBar = FALSE)
 ```
+
+----
+
+```{r}
+library(leaflet)
+
+pal <- colorNumeric("viridis", NULL)
+
+l <- leaflet(dgeo) %>%
+  addTiles() %>%
+  addPolygons(
+    stroke = TRUE, color = "#DADADA", weight = 1,
+    smoothFactor = 2, fillOpacity = 0.75,
+    fillColor = ~pal(escolaridad_promedio),
+    label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
+    ) %>%
+  addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
+```
+
+----
+
+```{r, echo=FALSE}
+# htmlwidgets::saveWidget(l, file = "l.html", libdir = "libs", selfcontained = FALSE)
+```
+<iframe src="l.html" width=1200 height=700></iframe>
 
 
 ----
@@ -496,51 +520,27 @@ library(mapdeck)
 
 token <- "pk.eyJ1IjoiamJrdW5zdCIsImEiOiJjamt4OTRmZXMwNjhoM3FxamNya2pqNHZjIn0.2FkUN09oWHz0Jg07MzyKKA"
 
-dgeo <- mutate(dgeo, personas_miles = personas/100)
+dgeo <- mutate(dgeo, personas_cientos = personas/100)
 
-md <- mapdeck(token = token, height = 800,
-               zoom = 8, location = c(-70.65664, -33.45327)) %>%
+md <- mapdeck(token = token, height = 700,
+               zoom = 7, location = c(-70.65664, -33.45327),
+              style = 'mapbox://styles/mapbox/dark-v9', pitch = 45) %>%
   add_polygon(
     data = dgeo, 
     fill_colour = "escolaridad_promedio", 
     tooltip = "DESC_COMUN", 
     stroke_width = 0, 
     layer = "Comuna",
-    elevation = "personas_miles"
+    elevation = "personas_cientos"
     )
 ```
 
 ----
 
 ```{r, echo=FALSE}
-widgetframe::frameWidget(md, height = 700)
+# htmlwidgets::saveWidget(md, file = "md.html", libdir = "libs", selfcontained = FALSE)
 ```
-
-
-```{r, include=FALSE}
-# library(leaflet)
-# 
-# pal <- colorNumeric("viridis", NULL)
-# 
-# l <- leaflet(dgeo) %>%
-#   addTiles() %>%
-#   addPolygons(
-#     stroke = TRUE, color = "#DADADA", weight = 1,
-#     smoothFactor = 0.3, fillOpacity = 0.75,
-#     fillColor = ~pal(escolaridad_promedio),
-#     label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
-#     ) %>%
-#   addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
-# l
-```
-
-----
-
-```{r, echo=FALSE}
-# widgetframe::frameWidget(l, height = 700)
-```
-
-
+<iframe src="md.html" width=1200 height=700></iframe>
 
 # Gracias
 

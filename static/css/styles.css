@@ -65,6 +65,7 @@ body {
 
 /* code */
 .reveal code { font-family: "Fira Mono"; font-size: 80%;}
+.reveal pre code { max-height: 700px; }
 
 /* img */
 .reveal section img {
