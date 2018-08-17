@@ -287,13 +287,14 @@ p
 ```{r}
 library(sf)
 
-dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
+# dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
+dgeo <- st_read("data/R13/Comuna.shp", layer = "Comuna")
 dgeo
 ```
 
 ```{r, echo=FALSE}
 theme_set(theme_gray())
-dgeo <- dgeo %>% mutate(COMUNA = as.numeric(COMUNA))
+dgeo <- dgeo %>% mutate(COMUNA = as.numeric(as.character(COMUNA)))
 # dgeo <- st_transform(dgeo, crs = 32719)
 ```
 
@@ -347,7 +348,7 @@ p2 <- ggplot() +
 
 ----
 
-Importar + Transformar + Visualizar
+Importar + Transformar + **Visualizar**
 
 ```{r, echo=FALSE, fig.height=7}
 p2
@@ -467,10 +468,10 @@ R poseee muchas otras formas de comunicar:
 ---- 
 
 ```{r}
-# library(highcharter)
-# hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio, 
-#                             group = region2, size = personas)) %>% 
-#   hc_add_theme(hc_theme_smpl())
+library(highcharter)
+hchart(data, "point", hcaes(ingreso_promedio_mm, escolaridad_promedio,
+                            group = region2, size = personas)) %>%
+  hc_add_theme(hc_theme_smpl())
 ```
 
 
@@ -491,26 +492,52 @@ ggplotly(p, height = 600) %>%
 ----
 
 ```{r}
-library(leaflet)
+library(mapdeck)
 
-pal <- colorNumeric("viridis", NULL)
+token <- "pk.eyJ1IjoiamJrdW5zdCIsImEiOiJjamt4OTRmZXMwNjhoM3FxamNya2pqNHZjIn0.2FkUN09oWHz0Jg07MzyKKA"
 
-l <- leaflet(dgeo) %>%
-  addTiles() %>%
-  addPolygons(
-    stroke = TRUE, color = "#DADADA", weight = 1,
-    smoothFactor = 0.3, fillOpacity = 0.75,
-    fillColor = ~pal(escolaridad_promedio),
-    label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
-    ) %>%
-  addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
-l
+dgeo <- mutate(dgeo, personas_miles = personas/100)
+
+md <- mapdeck(token = token, height = 800,
+               zoom = 8, location = c(-70.65664, -33.45327)) %>%
+  add_polygon(
+    data = dgeo, 
+    fill_colour = "escolaridad_promedio", 
+    tooltip = "DESC_COMUN", 
+    stroke_width = 0, 
+    layer = "Comuna",
+    elevation = "personas_miles"
+    )
 ```
 
 ----
 
 ```{r, echo=FALSE}
-widgetframe::frameWidget(l, height = 700)
+widgetframe::frameWidget(md, height = 700)
+```
+
+
+```{r, include=FALSE}
+# library(leaflet)
+# 
+# pal <- colorNumeric("viridis", NULL)
+# 
+# l <- leaflet(dgeo) %>%
+#   addTiles() %>%
+#   addPolygons(
+#     stroke = TRUE, color = "#DADADA", weight = 1,
+#     smoothFactor = 0.3, fillOpacity = 0.75,
+#     fillColor = ~pal(escolaridad_promedio),
+#     label = ~paste0(DESC_COMUN, ": ", escolaridad_promedio)
+#     ) %>%
+#   addLegend(pal = pal, values = ~escolaridad_promedio, opacity = 1.0)
+# l
+```
+
+----
+
+```{r, echo=FALSE}
+# widgetframe::frameWidget(l, height = 700)
 ```
 
 
