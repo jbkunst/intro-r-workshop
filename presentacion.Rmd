@@ -486,20 +486,58 @@ ggplotly(p, height = 600) %>%
   config(displayModeBar = FALSE)
 ```
 
+----
+
+```{r}
+comuna_tipohogar <- tbl(con, "hogar") %>% 
+  count(COMUNA, TIPO_HOGAR) %>% 
+  collect(n = Inf) %>% 
+  mutate(
+    TIPO_HOGAR = case_when(
+      TIPO_HOGAR == 1 ~ "unipersonal",
+      TIPO_HOGAR == 2 ~ "nuclear monoparental",
+      TIPO_HOGAR == 3 ~ "nuclear biparental sin hijos",
+      TIPO_HOGAR == 4 ~ "nuclear biparental con hijos",
+      TIPO_HOGAR == 5 ~ "compuesto",
+      TIPO_HOGAR == 6 ~ "extenso",
+      TIPO_HOGAR == 7 ~ "sin núcleo",
+      TRUE ~ "NA"
+    )
+  ) %>% 
+  rename(name = TIPO_HOGAR, y = n) %>% 
+  nest() %>% 
+  rename(ttdata = data) %>% 
+  mutate(ttdata = map(ttdata, list_parse)) 
+
+data <- left_join(data, comuna_tipohogar, by = c("CODIGO" = "COMUNA"))
+data
+```
+
 ---- 
 
 ```{r, results='hide'}
-# personas
-# data %>% 
-#   left_join(escolaridad_promedio)
-
 library(highcharter)
 
-hc <- hchart(data, type = "point",
-       hcaes(ingreso_promedio_mm, escolaridad_promedio,
-             group = region2, size = personas),
-       minSize = 1, maxSize = 15) %>%
-  hc_xAxis(type = "logarithmic") %>% 
+hc <- hchart(
+  data, type = "point",
+  hcaes(ingreso_promedio_mm, escolaridad_promedio, group = region2, size = personas),
+  minSize = 1, maxSize = 15
+  ) %>%
+  hc_xAxis(
+    type = "logarithmic", crosshair = TRUE,
+    labels = list(format = "${value}")) %>%
+  hc_colors(hex_to_rgba(viridis::cividis(9))) %>% 
+  hc_tooltip(
+    useHTML = TRUE,
+    pointFormatter = tooltip_chart(
+      accesor = "ttdata",
+      hc_opts = list(
+        chart = list(type = "pie"),
+        xAxis = list(type = "category"),
+        title = list(text = "point.COMUNA")
+        )
+    )
+  ) %>% 
   hc_add_theme(hc_theme_smpl()) %>% 
   hc_size(height = 700)
 
