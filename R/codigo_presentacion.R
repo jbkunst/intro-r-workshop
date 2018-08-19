@@ -1,3 +1,5 @@
+## install.packages(c("tidyverse", "haven", "dplyr", "DBI", "RMySQL", "sf", "classInt", "broom", "ggrepel", "plotly", "highcharter", "leaflet", "mapdeck"))
+
 ## ------------------------------------------------------------------------
 library(tidyverse)
 
@@ -129,19 +131,19 @@ p
 
 ## ------------------------------------------------------------------------
 library(sf)
-
-# dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
-dgeo <- st_read("data/R13/Comuna.shp", layer = "Comuna")
+dgeo <- st_read("data/shapes/R13/Comuna.shp", layer = "Comuna", quiet = TRUE)
 dgeo
 
 ## ------------------------------------------------------------------------
 theme_set(theme_gray())
 dgeo <- dgeo %>% mutate(COMUNA = as.numeric(as.character(COMUNA)))
+# dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
 # dgeo <- st_transform(dgeo, crs = 32719)
+
 
 ## ------------------------------------------------------------------------
 ggplot() +
-  geom_sf(data = dgeo) 
+  geom_sf(data = dgeo)
 
 ## ------------------------------------------------------------------------
 classint <- function(x, labels = NULL, ...) {
@@ -249,7 +251,7 @@ comuna_tipohogar <- tbl(con, "hogar") %>%
   rename(name = TIPO_HOGAR, y = n) %>% 
   nest() %>% 
   rename(ttdata = data) %>% 
-  mutate(ttdata = map(ttdata, list_parse)) 
+  mutate(ttdata = map(ttdata, highcharter::list_parse)) 
 
 data <- left_join(data, comuna_tipohogar, by = c("CODIGO" = "COMUNA"))
 data

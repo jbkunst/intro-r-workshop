@@ -37,6 +37,7 @@ knitr::opts_chunk$set(
   fig.height = 5
 )
 
+library(icon)
 library(jbkmisc)
 library(ggplot2)
 
@@ -44,21 +45,41 @@ theme_pres <- theme_jbk(
   base_family = "Roboto Condensed",
   plot_margin = margin(5, 5, 5, 5)
   ) + 
-  theme(
-    legend.position = "none",
-    )
+  theme(legend.position = "none")
 
 theme_set(theme_pres)
 ```
 
+## ¿Por qué R?
+
+
+
+- Lenguaje orientado a los datos (*)
+- Comunidad
+
+
 ----
 
-Antes de Empezar:
+Antes de partir
 
-- URL presentación http://bit.ly/intro-r-puc
-- Código 
+- Presentación http://bit.ly/intro-r-puc
+- Código http://bit.ly/intro-r-puc-codigo
+- Asignación: `var <- 5` significa que la variable `var` contiente el valor `5`  
+- Pipe: `var %>% f()`  que a la variable `var` le aplico la funciòn `f`. Reemplazar por **luego**
+- De la misma forma: `var %>% f() %>% g()` a `var` le aplico `f`, luego `g`
 
 ----
+
+Antes de partir
+
+> - __Datos tabulados__ es un conjunto de _valores_ cada uno asociado
+a una _variable_ y una _observación_
+
+![](http://garrettgman.github.io/images/tidy-1.png)
+
+----
+
+En general cualquier análsis(*)
 
 ![Flujo de trabajo](static/imgs/datapipeline.png) 
 
@@ -117,7 +138,7 @@ personas <- tbl(con,"personas")
 personas
 ```
 
-# Transformar { .center }
+# Transformar { .left .white data-background="http://media-cdn.timesfreepress.com/img/photos/2016/07/25/1469464845_0727MfeatLibrary1-C_t1070_h5be62d5b4b340aded4d6baf5bd671ee4fd6571f4.jpg" }
 
 ----
 
@@ -171,7 +192,7 @@ data <- data %>%
 data
 ```
 
-# Visualizar { .center }
+# Visualizar { .left .white data-background="https://gaw.imgix.net/wp-content/uploads/HEAD-Top-data-visualization-tools-for-small-business.png" }
 
 ---- 
 
@@ -284,9 +305,11 @@ p
 
 ----
 
-```{r, echo=FALSE, fig.height=7}
+```{r, echo=FALSE, fig.height=8}
 p
 ```
+
+## Otro ejemplo { .right data-background="https://lspensersmithsays.files.wordpress.com/2017/08/img_0392.jpg"} 
 
 ----
 
@@ -294,16 +317,16 @@ p
 
 ```{r}
 library(sf)
-
-# dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
-dgeo <- st_read("data/R13/Comuna.shp", layer = "Comuna")
+dgeo <- st_read("data/shapes/R13/Comuna.shp", layer = "Comuna", quiet = TRUE)
 dgeo
 ```
 
 ```{r, echo=FALSE}
 theme_set(theme_gray())
 dgeo <- dgeo %>% mutate(COMUNA = as.numeric(as.character(COMUNA)))
+# dgeo <- read_sf("data/R13/Comuna.shp", layer = "Comuna")
 # dgeo <- st_transform(dgeo, crs = 32719)
+
 ```
 
 ---- 
@@ -312,7 +335,7 @@ Importar + Transformar + **Visualizar**
 
 ```{r}
 ggplot() +
-  geom_sf(data = dgeo) 
+  geom_sf(data = dgeo)
 ```
 
 ----
@@ -362,7 +385,7 @@ Importar + Transformar + **Visualizar**
 p2
 ```
 
-# Modelar { .center }
+# Modelar { .center .left .white data-background="http://atkufa.ru/uploads/wallpapers/34863-data-visualization-wallpaper.jpg" }
 
 ----
 
@@ -507,7 +530,7 @@ comuna_tipohogar <- tbl(con, "hogar") %>%
   rename(name = TIPO_HOGAR, y = n) %>% 
   nest() %>% 
   rename(ttdata = data) %>% 
-  mutate(ttdata = map(ttdata, list_parse)) 
+  mutate(ttdata = map(ttdata, highcharter::list_parse)) 
 
 data <- left_join(data, comuna_tipohogar, by = c("CODIGO" = "COMUNA"))
 data
@@ -623,6 +646,13 @@ idx <- which(stringr::str_detect(lines, "^## "))
 
 lines <- lines[idx[2]:idx[length(idx)]]
 lines <- ifelse(stringr::str_detect(lines, "^## --"), "## ------------------------------------------------------------------------", lines)
+
+lines <- lines[which(stringr::str_detect(lines, "library"))] %>% 
+  stringr::str_remove_all("library\\(|\\)") %>% 
+  paste0("\"", ., "\"", collapse = ", ") %>% 
+  paste0("## install.packages(c(", ., "))") %>% 
+  c("", lines)
+
 writeLines(lines, "R/codigo_presentacion.R")
 ```
 
