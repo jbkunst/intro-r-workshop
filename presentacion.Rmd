@@ -315,7 +315,7 @@ p
 **Importar** + Transformar + Visualizar
 
 ```{r}
-library(sf) # daos espaciales
+library(sf) # datos espaciales
 dgeo <- st_read("data/shapes/R13/Comuna.shp", layer = "Comuna", quiet = TRUE)
 dgeo
 ```
@@ -370,10 +370,10 @@ Importar + Transformar + **Visualizar**
 p2 <- ggplot() +
   geom_sf(data = select(dgeo, COMUNA, geometry),
           fill = "gray95", color = "gray80", size = 0.1) +
-  geom_sf(data = dgeo, fill = "darkred", color = "gray80", size = 0.1) +
-  scale_fill_viridis_d() +
+  geom_sf(data = dgeo, aes(fill = escolaridad_promedio), color = "gray80", size = 0.1) +
+  scale_fill_viridis_c(option = "B") +
   facet_grid(ingreso ~ escolaridad) +
-  theme_minimal() 
+  theme_minimal()
 ```
 
 ----
@@ -639,6 +639,7 @@ Información Relevante:
 - Url shapes https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile
 
 ```{r, echo=FALSE, include=FALSE, cache=FALSE}
+library(tidyverse)
 knitr::purl("presentacion.Rmd", output = "R/codigo_presentacion.R", documentation = 1)
 lines <- readLines("R/codigo_presentacion.R")
 idx <- which(stringr::str_detect(lines, "^## "))

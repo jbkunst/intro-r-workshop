@@ -1,4 +1,4 @@
-## install.packages(c("tidyverse # combinacion de paquetes para leer, transformar, visualizar", "haven # SPSS SAS STATA", "DBI    # Interfaz para bases de datos", "RMySQL # Driver para MySQL", "sf # daos espaciales", "classInt # ayuda a crear intervalos ", "broom # lleva modelos/test a data frames", "ggrepel # extension ggplot2 que crea etiquetas que se repelen", "plotly # htmlwidgets de plotlyJS", "highcharter # htmlwidget para highcharts", "leaflet # htmlwidget de leafletJS", "mapdeck # hmtlwidget Mapbox + Deck.gl "))
+## install.packages(c("tidyverse # combinacion de paquetes para leer, transformar, visualizar", "haven # SPSS SAS STATA", "DBI    # Interfaz para bases de datos", "RMySQL # Driver para MySQL", "sf # datos espaciales", "classInt # ayuda a crear intervalos ", "broom # lleva modelos/test a data frames", "ggrepel # extension ggplot2 que crea etiquetas que se repelen", "plotly # htmlwidgets de plotlyJS", "highcharter # htmlwidget para highcharts", "leaflet # htmlwidget de leafletJS", "mapdeck # hmtlwidget Mapbox + Deck.gl "))
 
 ## ------------------------------------------------------------------------
 library(tidyverse) # combinacion de paquetes para leer, transformar, visualizar
@@ -129,7 +129,7 @@ p
 p
 
 ## ------------------------------------------------------------------------
-library(sf) # daos espaciales
+library(sf) # datos espaciales
 dgeo <- st_read("data/shapes/R13/Comuna.shp", layer = "Comuna", quiet = TRUE)
 dgeo
 
@@ -166,10 +166,10 @@ glimpse(dgeo)
 p2 <- ggplot() +
   geom_sf(data = select(dgeo, COMUNA, geometry),
           fill = "gray95", color = "gray80", size = 0.1) +
-  geom_sf(data = dgeo, fill = "darkred", color = "gray80", size = 0.1) +
-  scale_fill_viridis_d() +
+  geom_sf(data = dgeo, aes(fill = escolaridad_promedio), color = "gray80", size = 0.1) +
+  scale_fill_viridis_c(option = "B") +
   facet_grid(ingreso ~ escolaridad) +
-  theme_minimal() 
+  theme_minimal()
 
 ## ------------------------------------------------------------------------
 p2
