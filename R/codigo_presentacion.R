@@ -1,21 +1,20 @@
-## install.packages(c("tidyverse", "haven", "dplyr", "DBI", "RMySQL", "sf", "classInt", "broom", "ggrepel", "plotly", "highcharter", "leaflet", "mapdeck"))
+## install.packages(c("tidyverse # combinacion de paquetes para leer, transformar, visualizar", "haven # SPSS SAS STATA", "DBI    # Interfaz para bases de datos", "RMySQL # Driver para MySQL", "sf # daos espaciales", "classInt # ayuda a crear intervalos ", "broom # lleva modelos/test a data frames", "ggrepel # extension ggplot2 que crea etiquetas que se repelen", "plotly # htmlwidgets de plotlyJS", "highcharter # htmlwidget para highcharts", "leaflet # htmlwidget de leafletJS", "mapdeck # hmtlwidget Mapbox + Deck.gl "))
 
 ## ------------------------------------------------------------------------
-library(tidyverse)
+library(tidyverse) # combinacion de paquetes para leer, transformar, visualizar
 
 comunas <- read_csv("data/codigos_comunales.csv")
 comunas
 
 ## ------------------------------------------------------------------------
-library(haven)
+library(haven) # SPSS SAS STATA
 
 casen <- read_sav("data/casen/Casen 2015.sav")
 casen
 
 ## ------------------------------------------------------------------------
-library(dplyr)
-library(DBI)
-library(RMySQL)
+library(DBI)    # Interfaz para bases de datos
+library(RMySQL) # Driver para MySQL
 
 con <- dbConnect(
   drv = MySQL(),
@@ -130,7 +129,7 @@ p
 p
 
 ## ------------------------------------------------------------------------
-library(sf)
+library(sf) # daos espaciales
 dgeo <- st_read("data/shapes/R13/Comuna.shp", layer = "Comuna", quiet = TRUE)
 dgeo
 
@@ -151,7 +150,7 @@ classint <- function(x, labels = NULL, ...) {
 }
 
 ## ------------------------------------------------------------------------
-library(classInt)
+library(classInt) # ayuda a crear intervalos 
 niveles <- c("bajo", "medio", "alto")
 
 dgeo <- dgeo %>% 
@@ -189,7 +188,7 @@ datag <- data %>%
 datag
 
 ## ------------------------------------------------------------------------
-library(broom)
+library(broom) # lleva modelos/test a data frames
 
 datag <- datag %>% 
   mutate(
@@ -214,7 +213,7 @@ dmods <- dmods %>%
 dmods
 
 ## ------------------------------------------------------------------------
-library(ggrepel)
+library(ggrepel) # extension ggplot2 que crea etiquetas que se repelen
 
 p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
   geom_point(size = 7, alpha = 0.6, color = "gray60") +
@@ -228,7 +227,7 @@ p3
 p <- p + theme_gray()
 
 ## ------------------------------------------------------------------------
-library(plotly)
+library(plotly) # htmlwidgets de plotlyJS
 ggplotly(p, height = 600) %>%
   config(displayModeBar = FALSE)
 
@@ -257,7 +256,7 @@ data <- left_join(data, comuna_tipohogar, by = c("CODIGO" = "COMUNA"))
 data
 
 ## ------------------------------------------------------------------------
-library(highcharter)
+library(highcharter) # htmlwidget para highcharts
 
 hc <- hchart(
   data, type = "point",
@@ -288,7 +287,7 @@ hc
 ## htmlwidgets::saveWidget(hc, file = "hc.html", libdir = "libs", selfcontained = FALSE)
 
 ## ------------------------------------------------------------------------
-library(leaflet)
+library(leaflet) # htmlwidget de leafletJS
 
 pal <- colorNumeric("viridis", NULL)
 
@@ -307,7 +306,7 @@ l
 ## htmlwidgets::saveWidget(l, file = "l.html", libdir = "libs", selfcontained = FALSE)
 
 ## ------------------------------------------------------------------------
-library(mapdeck)
+library(mapdeck) # hmtlwidget Mapbox + Deck.gl 
 
 token <- "pk.eyJ1IjoiamJrdW5zdCIsImEiOiJjamt4OTRmZXMwNjhoM3FxamNya2pqNHZjIn0.2FkUN09oWHz0Jg07MzyKKA"
 

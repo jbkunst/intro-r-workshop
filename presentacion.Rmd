@@ -97,7 +97,7 @@ Con R podemos acceder a información desde distintas fuentes:
 ----
 
 ```{r}
-library(tidyverse)
+library(tidyverse) # combinacion de paquetes para leer, transformar, visualizar
 
 comunas <- read_csv("data/codigos_comunales.csv")
 comunas
@@ -106,7 +106,7 @@ comunas
 ---- 
 
 ```{r}
-library(haven)
+library(haven) # SPSS SAS STATA
 
 casen <- read_sav("data/casen/Casen 2015.sav")
 casen
@@ -115,9 +115,8 @@ casen
 ----
 
 ```{r, cache=FALSE}
-library(dplyr)
-library(DBI)
-library(RMySQL)
+library(DBI)    # Interfaz para bases de datos
+library(RMySQL) # Driver para MySQL
 
 con <- dbConnect(
   drv = MySQL(),
@@ -259,7 +258,7 @@ p
 
 ----
 
-Aquí *parte* la magia 
+Aquí parte la magia 
 
 <div id="left">
 ```{r results='hide'}
@@ -281,7 +280,7 @@ p
 
 ----
 
-Aquí *sigue* la magia 
+Aquí sigue la magia 
 
 <div id="left">
 ```{r results='hide'}
@@ -316,7 +315,7 @@ p
 **Importar** + Transformar + Visualizar
 
 ```{r}
-library(sf)
+library(sf) # daos espaciales
 dgeo <- st_read("data/shapes/R13/Comuna.shp", layer = "Comuna", quiet = TRUE)
 dgeo
 ```
@@ -350,7 +349,7 @@ classint <- function(x, labels = NULL, ...) {
 
 
 ```{r}
-library(classInt)
+library(classInt) # ayuda a crear intervalos 
 niveles <- c("bajo", "medio", "alto")
 
 dgeo <- dgeo %>% 
@@ -419,7 +418,7 @@ datag
 ----
 
 ```{r}
-library(broom)
+library(broom) # lleva modelos/test a data frames
 
 datag <- datag %>% 
   mutate(
@@ -459,7 +458,7 @@ dmods
 Visualizar
 
 ```{r}
-library(ggrepel)
+library(ggrepel) # extension ggplot2 que crea etiquetas que se repelen
 
 p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
   geom_point(size = 7, alpha = 0.6, color = "gray60") +
@@ -504,7 +503,7 @@ p <- p + theme_gray()
 
 
 ```{r, echo=TRUE}
-library(plotly)
+library(plotly) # htmlwidgets de plotlyJS
 ggplotly(p, height = 600) %>%
   config(displayModeBar = FALSE)
 ```
@@ -539,7 +538,7 @@ data
 ---- 
 
 ```{r, results='hide'}
-library(highcharter)
+library(highcharter) # htmlwidget para highcharts
 
 hc <- hchart(
   data, type = "point",
@@ -577,7 +576,7 @@ htmlwidgets::saveWidget(hc, file = "hc.html", libdir = "libs", selfcontained = F
 ----
 
 ```{r, results='hide'}
-library(leaflet)
+library(leaflet) # htmlwidget de leafletJS
 
 pal <- colorNumeric("viridis", NULL)
 
@@ -604,7 +603,7 @@ htmlwidgets::saveWidget(l, file = "l.html", libdir = "libs", selfcontained = FAL
 ----
 
 ```{r, results='hide'}
-library(mapdeck)
+library(mapdeck) # hmtlwidget Mapbox + Deck.gl 
 
 token <- "pk.eyJ1IjoiamJrdW5zdCIsImEiOiJjamt4OTRmZXMwNjhoM3FxamNya2pqNHZjIn0.2FkUN09oWHz0Jg07MzyKKA"
 
