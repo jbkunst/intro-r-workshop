@@ -1,4 +1,4 @@
-## install.packages(c("tidyverse # combinacion de paquetes para leer, transformar, visualizar", "haven # SPSS SAS STATA", "DBI    # Interfaz para bases de datos", "RMySQL # Driver para MySQL", "sf # datos espaciales", "classInt # ayuda a crear intervalos ", "broom # lleva modelos/test a data frames", "ggrepel # extension ggplot2 que crea etiquetas que se repelen", "plotly # htmlwidgets de plotlyJS", "highcharter # htmlwidget para highcharts", "leaflet # htmlwidget de leafletJS", "mapdeck # hmtlwidget Mapbox + Deck.gl "))
+## install.packages(c("tidyverse", "haven", "DBI", "RMySQL", "sf", "classInt", "broom", "ggrepel", "plotly", "highcharter", "leaflet", "mapdeck"))
 
 ## ------------------------------------------------------------------------
 library(tidyverse) # combinacion de paquetes para leer, transformar, visualizar

@@ -49,38 +49,94 @@ ggplot(casen) + geom_histogram(aes(y1)) + scale_x_log10()
 casen$y1 %>% summary()
 
 
+# cluster -----------------------------------------------------------------
 casen <- casen %>%
-  # head(10) %>% 
   select(-folio, -o, -id_vivienda, -provincia, -zona, -hogar)
+
+casendict <- casen %>% 
+  distinct(region, comuna) %>% 
+  mutate(comuna_lbl = as_factor(comuna))
+
+casen <- casen %>% 
+  mutate_if(is.labelled, as_factor)
+
+casen %>% 
+  map(class) %>% 
+  unlist() %>% 
+  table()
+
+casen <- casen %>% 
+  select_if(negate(is.character))
 
 # casen num  
 casen_num <- casen %>% 
   group_by(region, comuna) %>% 
-  summarise_if(negate(is.labelled), mean, na.rm = TRUE)
+  select_if(is.numeric) %>% 
+  ungroup()
 
-# casen cat
-casen_cat <- ""
-
-casen %>%
-  head(200) %>% 
+# casen factor
+casen_fac <- casen %>% 
   group_by(region, comuna) %>% 
-  select(-ends_with("esp")) %>% 
-  select(matches("^[a-z][1-3][a-z]?"))
-  select_if(is.labelled) %>% 
-  select_if(negate(is.character)) %>% 
-  mutate_if(is.labelled, as_factor) %>%
-  mutate_if(is.factor, fct_explicit_na, na_level = "(NA)") %>% 
-  mutate_if(is.factor, fct_lump)
+  select_if(is.factor) %>% 
+  ungroup()
 
-casen_cat <- casen_cat %>% 
-  ungroup() %>% 
-  # sample_n(2000) %>% 
-  gather(key, value, -region, -comuna) %>% 
-  count(region, comuna, key, value) %>% 
-  group_by(region, comuna, key) %>% 
-  mutate(n = n/sum(n)) %>% 
-  ungroup() %>% 
-  unite("key_value", c("key", "value")) %>% 
-  spread(key_value, n) %>% 
-  mutate_all(replace_na, 0)
+rm(casen)
+gc()
 
+casen_num_c <- casen_num %>% 
+  group_by(region, comuna) %>% 
+  summarise_all(mean, na.rm = TRUE) %>% 
+  mutate_all(replace_na, 0) %>% 
+  ungroup()
+
+
+# devtools::install_github("jlmelville/smallvis/smallvis")
+library(smallvis)
+
+
+
+# Using a custom epoch_callback
+uniq_spec <- unique(casen_num_c$region)
+colors <- rainbow(length(uniq_spec))
+names(colors) <- uniq_spec
+casen_plot <- function(x) {
+  plot(x, col = colors[casen_num_c$region])
+}
+
+tsne_casen_num_c <- smallvis(casen_num_c, perplexity = 25, epoch_callback = casen_plot, verbose = TRUE)
+
+umap_casen_num_c <- smallvis(casen_num_c, method = "umap", perplexity = 25, eta = 0.01)
+
+casen_num_c %>% 
+  bind_cols(as.data.frame(umap_casen_num_c)) %>% 
+  ggplot(aes(V1, V2, color = region, label = comuna)) +
+  geom_point() +
+  ggrepel::geom_text_repel(size = 2) 
+  # facet_wrap(~region, scales = "free")
+
+
+
+table_list <- function(x) {
+  # x <- sample(LETTERS[1:5], 20, 1:5, replace = TRUE)
+  t <- table(x)
+  
+  data_frame(
+    cat = names(t),
+    val = as.numeric(prop.table(t))
+  ) %>% 
+    spread(cat, val) %>% 
+    list()
+}
+
+casen_fac_c <- casen_fac %>% 
+  # select(1:20) %>% head(1000) %>%
+  mutate_all(fct_explicit_na, na_level = "NA") %>% 
+  mutate_at(vars(-1, -2), fct_lump, other_level = "Otra") %>% 
+  group_by(region, comuna) %>% 
+  summarise_all(table_list) %>% 
+  unnest()
+  
+  group_by()
+  mutate_all()
+
+  

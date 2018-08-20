@@ -52,8 +52,6 @@ theme_set(theme_pres)
 
 ## ¿Por qué R?
 
-
-
 - Lenguaje orientado a los datos (*)
 - Comunidad
 
@@ -65,15 +63,15 @@ Antes de partir
 - Presentación http://bit.ly/intro-r-puc
 - Código http://bit.ly/intro-r-puc-codigo
 - Asignación: `var <- 5` significa que la variable `var` contiente el valor `5`  
-- Pipe: `var %>% f()`  que a la variable `var` le aplico la funciòn `f`. Reemplazar por **luego**
+- Pipe: `var %>% f()`  que a la variable `var` le aplico la función `f`. Leer como **luego**
 - De la misma forma: `var %>% f() %>% g()` a `var` le aplico `f`, luego `g`
 
 ----
 
 Antes de partir
 
-> - __Datos tabulados__ es un conjunto de _valores_ cada uno asociado
-a una _variable_ y una _observación_
+> - Tabla, Datos tabulados o _data frame es un conjunto de valores cada uno asociado
+a una variable y una observación
 
 ![](http://garrettgman.github.io/images/tidy-1.png)
 
@@ -472,6 +470,37 @@ p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
 p3
 ```
 
+<!-- ## Ejemplo 2 -->
+
+<!-- Obtener las comunas que no -->
+
+<!-- ```{r} -->
+<!-- dataaug <- datag %>%  -->
+<!--   mutate(augment = map(modelo, augment)) %>% -->
+<!--   select(region2, data, augment) %>%  -->
+<!--   unnest() -->
+<!-- glimpse(dataaug) -->
+<!-- ``` -->
+
+<!-- ---- -->
+
+<!-- ```{r} -->
+<!-- dataaugmin <- dataaug %>%  -->
+<!--   group_by(region2) %>%  -->
+<!--   arrange(region2, desc(abs(.std.resid))) %>%  -->
+<!--   top_n(2) -->
+
+<!-- ggplot(dataaugmin) + -->
+<!--   geom_col(aes(COMUNA, abs(.std.resid))) + -->
+<!--   coord_flip() + -->
+<!--   facet_wrap(~region2, scales = "free") -->
+<!-- ``` -->
+  
+----
+
+
+
+
 # Comunicar { .center }
 
 ----
@@ -648,7 +677,8 @@ lines <- lines[idx[2]:idx[length(idx)]]
 lines <- ifelse(stringr::str_detect(lines, "^## --"), "## ------------------------------------------------------------------------", lines)
 
 lines <- lines[which(stringr::str_detect(lines, "library"))] %>% 
-  stringr::str_remove_all("library\\(|\\)") %>% 
+  stringr::str_extract("\\(.*\\)") %>% 
+  stringr::str_remove_all("\\(|\\)") %>% 
   paste0("\"", ., "\"", collapse = ", ") %>% 
   paste0("## install.packages(c(", ., "))") %>% 
   c("", lines)
