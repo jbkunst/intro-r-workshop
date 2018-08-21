@@ -23,9 +23,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Elementos del Datascience
-<!-- # Introducción al Uso de R para Análisis Estadístico -->
-
+# Introducción al Uso de R para Análisis Estadístico
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
