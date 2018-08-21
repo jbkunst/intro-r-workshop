@@ -494,10 +494,11 @@ document.getElementsByTagName('head')[0].appendChild(style);
     <div class="slides">
 
 
-<section><section id="introduccion-al-uso-de-r-para-analisis-estadistico" class="titleslide slide level1"><h1>Introducción al Uso de R para Análisis Estadístico</h1></section><section id="por-que-r" class="slide level2">
+<section><section id="elementos-del-datascience" class="titleslide slide level1"><h1>Elementos del Datascience</h1></section><section id="por-que-r" class="slide level2">
 <h2>¿Por qué R?</h2>
 <ul>
 <li class="fragment">Lenguaje orientado a los datos (*)</li>
+<li class="fragment">Flexibilidad. Lenguaje de interfaces.</li>
 <li class="fragment">Comunidad</li>
 </ul>
 </section><section class="slide level2">
@@ -508,14 +509,14 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <li class="fragment">Código <a href="http://bit.ly/intro-r-puc-codigo" class="uri">http://bit.ly/intro-r-puc-codigo</a></li>
 <li class="fragment">Asignación: <code>var &lt;- 5</code> significa que la variable <code>var</code> contiente el valor <code>5</code><br />
 </li>
-<li class="fragment">Pipe: <code>var %&gt;% f()</code> que a la variable <code>var</code> le aplico la funciòn <code>f</code>. Reemplazar por <strong>luego</strong></li>
+<li class="fragment">Pipe: <code>var %&gt;% f()</code> que a la variable <code>var</code> le aplico la función <code>f</code>. Leer como <strong>luego</strong></li>
 <li class="fragment">De la misma forma: <code>var %&gt;% f() %&gt;% g()</code> a <code>var</code> le aplico <code>f</code>, luego <code>g</code></li>
 </ul>
 </section><section class="slide level2">
 
 <p>Antes de partir</p>
 <ul>
-<li><strong>Datos tabulados</strong> es un conjunto de <em>valores</em> cada uno asociado a una <em>variable</em> y una <em>observación</em></li>
+<li>Tabla, Datos tabulados o _data frame es un conjunto de valores cada uno asociado a una variable y una observación</li>
 </ul>
 <p><img src="http://garrettgman.github.io/images/tidy-1.png" /></p>
 </section><section class="slide level2">
@@ -524,6 +525,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p><img src="static/imgs/datapipeline.png" alt="Flujo de trabajo" /></p>
 </section></section>
 <section><section id="importar" class="titleslide slide level1 center white" data-background="https://creativevibes.org/wp-content/uploads/2017/05/Start-The-Journey-Images.jpg"><h1>Importar</h1></section><section class="slide level2">
+
+<p><img src="static/imgs/import-r.png" alt="import" /></p>
+</section><section class="slide level2">
 
 <p>Con R podemos acceder a información desde distintas fuentes:</p>
 <ul>
@@ -643,6 +647,18 @@ personas</code></pre></div>
 </section></section>
 <section><section id="transformar" class="titleslide slide level1 left white" data-background="http://media-cdn.timesfreepress.com/img/photos/2016/07/25/1469464845_0727MfeatLibrary1-C_t1070_h5be62d5b4b340aded4d6baf5bd671ee4fd6571f4.jpg"><h1>Transformar</h1></section><section class="slide level2">
 
+<div id="left">
+<p><img src="static/imgs/filter.png" alt="import" /></p>
+<p><br></p>
+<p><img src="static/imgs/select.png" alt="import" /></p>
+</div>
+<div id="right">
+<p><img src="static/imgs/group_by_summarize.png" alt="import" /></p>
+<p><br></p>
+<p><img src="static/imgs/mutate.png" alt="import" /></p>
+</div>
+</section><section class="slide level2">
+
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">casen_comuna &lt;-<span class="st"> </span>casen <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">comuna =</span> <span class="kw">as.numeric</span>(comuna)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(comuna) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -731,6 +747,9 @@ data</code></pre></div>
 ## # ... with 314 more rows</code></pre>
 </section></section>
 <section><section id="visualizar" class="titleslide slide level1 left white" data-background="https://gaw.imgix.net/wp-content/uploads/HEAD-Top-data-visualization-tools-for-small-business.png"><h1>Visualizar</h1></section><section class="slide level2">
+
+<p><img src="static/imgs/data-viz.jpg" alt="Flujo de trabajo" /></p>
+</section><section class="slide level2">
 
 <ul>
 <li class="fragment">Visualización: Principal caraterística</li>
@@ -1026,6 +1045,28 @@ p3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dmods, <span cla
 </section><section class="slide level2">
 
 <p><img src="static/imgs/slides/unnamed-chunk-37-1.svg" width="1056" /></p>
+<!-- ## Ejemplo 2 -->
+<!-- Obtener las comunas que no -->
+<!-- ```{r} -->
+<!-- dataaug <- datag %>%  -->
+<!--   mutate(augment = map(modelo, augment)) %>% -->
+<!--   select(region2, data, augment) %>%  -->
+<!--   unnest() -->
+<!-- glimpse(dataaug) -->
+<!-- ``` -->
+<!-- ---- -->
+<!-- ```{r} -->
+<!-- dataaugmin <- dataaug %>%  -->
+<!--   group_by(region2) %>%  -->
+<!--   arrange(region2, desc(abs(.std.resid))) %>%  -->
+<!--   top_n(2) -->
+<!-- ggplot(dataaugmin) + -->
+<!--   geom_col(aes(COMUNA, abs(.std.resid))) + -->
+<!--   coord_flip() + -->
+<!--   facet_wrap(~region2, scales = "free") -->
+<!-- ``` -->
+</section><section class="slide level2">
+
 </section></section>
 <section><section id="comunicar" class="titleslide slide level1 center"><h1>Comunicar</h1></section><section class="slide level2">
 
@@ -1034,7 +1075,7 @@ p3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dmods, <span cla
 <li class="fragment">Presentar un par de números</li>
 <li class="fragment">Mostrar un gráfico</li>
 </ul>
-<p>Es</p>
+<p><span class="fragment">Es</span></p>
 <ul>
 <li class="fragment">Atraer al receptor, y facilitarle la lectura</li>
 <li class="fragment">Contar la historía, dar razones</li>
@@ -1046,7 +1087,15 @@ p3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dmods, <span cla
 <ul>
 <li class="fragment">Gráficos interactivos (htmlwidgets)</li>
 <li class="fragment">Creación de documentos (words, pdf, html)</li>
-<li class="fragment">Aplicaciones/dashboard webs</li>
+<li class="fragment">Dashboards, aplicaciones webs</li>
+</ul>
+</section><section id="htmlwidgets" class="slide level2 center white" data-background="#009688">
+<h2>htmlwidgets</h2>
+</section><section class="slide level2">
+
+<ul>
+<li class="fragment">htmlwidgets son paquetes que implementan alguna libreria <code>javascript</code></li>
+<li class="fragment"></li>
 </ul>
 </section><section class="slide level2">
 
@@ -1169,6 +1218,10 @@ md</code></pre></div>
 
 <iframe src="md.html" width="1200" height="700">
 </iframe>
+</section><section id="rmarkdown" class="slide level2 center white" data-background="#F44336">
+<h2>Rmarkdown</h2>
+</section><section id="shiny" class="slide level2 center white" data-background="#3F51B5">
+<h2>Shiny</h2>
 </section></section>
 <section><section id="gracias" class="titleslide slide level1"><h1>Gracias</h1></section><section class="slide level2">
 

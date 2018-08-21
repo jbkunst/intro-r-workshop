@@ -23,7 +23,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Introducción al Uso de R para Análisis Estadístico
+# Elementos del Datascience
+<!-- # Introducción al Uso de R para Análisis Estadístico -->
+
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
@@ -53,6 +55,7 @@ theme_set(theme_pres)
 ## ¿Por qué R?
 
 - Lenguaje orientado a los datos (*)
+- Flexibilidad. Lenguaje de interfaces.
 - Comunidad
 
 
@@ -82,6 +85,10 @@ En general cualquier análsis(*)
 ![Flujo de trabajo](static/imgs/datapipeline.png) 
 
 # Importar { .center .white data-background=https://creativevibes.org/wp-content/uploads/2017/05/Start-The-Journey-Images.jpg}
+
+----
+
+![import](static/imgs/import-r.png) 
 
 ----
 
@@ -139,6 +146,23 @@ personas
 
 ----
 
+<div id="left">
+![import](static/imgs/filter.png) 
+
+<br>
+
+![import](static/imgs/select.png) 
+</div>
+<div id="right">
+![import](static/imgs/group_by_summarize.png) 
+
+<br>
+
+![import](static/imgs/mutate.png) 
+</div>
+
+----
+
 ```{r}
 casen_comuna <- casen %>% 
   mutate(comuna = as.numeric(comuna)) %>% 
@@ -190,6 +214,10 @@ data
 ```
 
 # Visualizar { .left .white data-background="https://gaw.imgix.net/wp-content/uploads/HEAD-Top-data-visualization-tools-for-small-business.png" }
+
+----
+
+![Flujo de trabajo](static/imgs/data-viz.jpg) 
 
 ---- 
 
@@ -510,7 +538,7 @@ Comunicar no es solo
 - Presentar un par de números
 - Mostrar un gráfico 
 
-Es
+<span class="fragment">Es</span>
 
 - Atraer al receptor, y facilitarle la lectura
 - Contar la historía, dar razones
@@ -522,13 +550,23 @@ R poseee muchas otras formas de comunicar:
 
 - Gráficos interactivos (htmlwidgets)
 - Creación de documentos (words, pdf, html)
-- Aplicaciones/dashboard webs 
+- Dashboards, aplicaciones webs 
+
+## htmlwidgets { .center .white data-background="#009688"}
+
+
+----
+
+- htmlwidgets son paquetes que implementan alguna libreria `javascript`
+- 
+
 
 ----
 
 ```{r, echo=FALSE}
 p <- p + theme_gray()
 ```
+
 
 
 ```{r, echo=TRUE}
@@ -658,6 +696,9 @@ md
 htmlwidgets::saveWidget(md, file = "md.html", libdir = "libs", selfcontained = FALSE)
 ```
 <iframe src="md.html" width=1200 height=700></iframe>
+
+## Rmarkdown { .center .white data-background="#F44336"}
+## Shiny { .center .white data-background="#3F51B5"}
 
 # Gracias
 
