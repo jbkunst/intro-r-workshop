@@ -169,7 +169,8 @@ p2 <- ggplot() +
   geom_sf(data = dgeo, aes(fill = escolaridad_promedio), color = "gray80", size = 0.1) +
   scale_fill_viridis_c(option = "B") +
   facet_grid(ingreso ~ escolaridad) +
-  theme_minimal()
+  theme_minimal() +
+  labs(x = "Ingreso", y = "Escolaridad")
 
 ## ------------------------------------------------------------------------
 p2
@@ -216,9 +217,9 @@ dmods
 library(ggrepel) # extension ggplot2 que crea etiquetas que se repelen
 
 p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
-  geom_point(size = 7, alpha = 0.6, color = "gray60") +
+  geom_point(size = 8, color = "darkred", alpha = 0.6, shape = 16) +
   geom_text_repel(aes(label = region2), force = 20) +
-  scale_x_continuous(limits = c(0, NA))
+  scale_x_continuous(limits = c(0, NA)) 
 
 ## ------------------------------------------------------------------------
 p3

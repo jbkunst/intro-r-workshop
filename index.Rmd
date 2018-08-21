@@ -23,7 +23,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Introducción al Uso de R para Análisis Estadístico
+# Introducción al Uso de R para Análisis Estadístico { .center .white data-background="https://images.idgesg.net/images/article/2018/05/cw_r_guide_video_series_thinkstock_16x9_1920x1080-100758020-orig.jpg" }
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
@@ -50,10 +50,13 @@ theme_pres <- theme_jbk(
 theme_set(theme_pres)
 ```
 
+## ¿cómo estamos? { .center .white data-background="static/imgs/yay.gif" }
+
 ## ¿Por qué R?
 
 - Lenguaje orientado a los datos (*)
 - Flexibilidad. Lenguaje de interfaces.
+- +11.000 paquetes
 - Comunidad
 
 
@@ -61,8 +64,8 @@ theme_set(theme_pres)
 
 Antes de partir
 
-- Presentación http://bit.ly/intro-r-puc
-- Código http://bit.ly/intro-r-puc-codigo
+- Presentación http://jkunst.com/intro-r-workshop/
+- Código https://github.com/jbkunst/intro-r-workshop
 - Asignación: `var <- 5` significa que la variable `var` contiente el valor `5`  
 - Pipe: `var %>% f()`  que a la variable `var` le aplico la función `f`. Leer como **luego**
 - De la misma forma: `var %>% f() %>% g()` a `var` le aplico `f`, luego `g`
@@ -86,6 +89,7 @@ En general cualquier análsis(*)
 
 ----
 
+<br><br>
 ![import](static/imgs/import-r.png) 
 
 ----
@@ -145,18 +149,15 @@ personas
 ----
 
 <div id="left">
-![import](static/imgs/filter.png) 
-
+![filter](static/imgs/filter.png) 
 <br>
-
-![import](static/imgs/select.png) 
+![select](static/imgs/select.png) 
 </div>
+
 <div id="right">
-![import](static/imgs/group_by_summarize.png) 
-
+![groupby](static/imgs/group_by_summarize.png) 
 <br>
-
-![import](static/imgs/mutate.png) 
+![mutate](static/imgs/mutate.png) 
 </div>
 
 ----
@@ -215,12 +216,14 @@ data
 
 ----
 
-![Flujo de trabajo](static/imgs/data-viz.jpg) 
+![dataviz](static/imgs/data-viz.jpg) 
 
 ---- 
 
-- Visualización: Principal caraterística 
-- Paquete `ggplot2`. Muy poderoso.
+Visualización en R
+
+- Principal caraterística 
+- Paquete `ggplot2`. Muy poderoso (entre otros)
 - Existen librerías interactivas
 
 ----
@@ -397,14 +400,13 @@ p2 <- ggplot() +
   geom_sf(data = dgeo, aes(fill = escolaridad_promedio), color = "gray80", size = 0.1) +
   scale_fill_viridis_c(option = "B") +
   facet_grid(ingreso ~ escolaridad) +
-  theme_minimal()
+  theme_minimal() +
+  labs(x = "Ingreso", y = "Escolaridad")
 ```
 
 ----
 
-Importar + Transformar + **Visualizar**
-
-```{r, echo=FALSE, fig.height=7}
+```{r, echo=FALSE, fig.height=8}
 p2
 ```
 
@@ -485,49 +487,20 @@ Visualizar
 library(ggrepel) # extension ggplot2 que crea etiquetas que se repelen
 
 p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
-  geom_point(size = 7, alpha = 0.6, color = "gray60") +
+  geom_point(size = 8, color = "darkred", alpha = 0.6, shape = 16) +
   geom_text_repel(aes(label = region2), force = 20) +
-  scale_x_continuous(limits = c(0, NA))
+  scale_x_continuous(limits = c(0, NA)) 
 ```
 
 ----
+
+$escolaridad = \alpha + \beta \times ingreso\_promedio\_mm$
 
 ```{r, echo=FALSE, fig.height=7}
 p3
 ```
 
-<!-- ## Ejemplo 2 -->
-
-<!-- Obtener las comunas que no -->
-
-<!-- ```{r} -->
-<!-- dataaug <- datag %>%  -->
-<!--   mutate(augment = map(modelo, augment)) %>% -->
-<!--   select(region2, data, augment) %>%  -->
-<!--   unnest() -->
-<!-- glimpse(dataaug) -->
-<!-- ``` -->
-
-<!-- ---- -->
-
-<!-- ```{r} -->
-<!-- dataaugmin <- dataaug %>%  -->
-<!--   group_by(region2) %>%  -->
-<!--   arrange(region2, desc(abs(.std.resid))) %>%  -->
-<!--   top_n(2) -->
-
-<!-- ggplot(dataaugmin) + -->
-<!--   geom_col(aes(COMUNA, abs(.std.resid))) + -->
-<!--   coord_flip() + -->
-<!--   facet_wrap(~region2, scales = "free") -->
-<!-- ``` -->
-  
-----
-
-
-
-
-# Comunicar { .center }
+# Comunicar { .left data-background="static/imgs/data-visualization-tools-concept.png"}
 
 ----
 
@@ -708,7 +681,7 @@ Información Relevante:
 
 ```{r, echo=FALSE, include=FALSE, cache=FALSE}
 library(tidyverse)
-knitr::purl("presentacion.Rmd", output = "R/codigo_presentacion.R", documentation = 1)
+knitr::purl("index.Rmd", output = "R/codigo_presentacion.R", documentation = 1)
 lines <- readLines("R/codigo_presentacion.R")
 idx <- which(stringr::str_detect(lines, "^## "))
 
