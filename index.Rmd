@@ -74,7 +74,7 @@ Antes de partir
 
 Antes de partir
 
-> - Tabla, Datos tabulados o _data frame es un conjunto de valores cada uno asociado
+> - Tabla, Datos tabulados o _data frame_ es un conjunto de valores cada uno asociado
 a una variable y una observación
 
 ![](http://garrettgman.github.io/images/tidy-1.png)
@@ -99,12 +99,12 @@ Con R podemos acceder a información desde distintas fuentes:
 - Archivos de texto plano: txt, csv, tsv
 - Archivos MS excel, SPSS, SAS
 - Base de Datos: MySQL, SQLServer, PostgreSQL
-- APIs 
+- APIs, sitios webs 
 
 ----
 
 ```{r}
-library(tidyverse) # combinacion de paquetes para leer, transformar, visualizar
+library(tidyverse) # combinacion de paquetes para importar + transformar + visualizar
 
 comunas <- read_csv("data/codigos_comunales.csv")
 comunas
@@ -148,6 +148,8 @@ personas
 
 ----
 
+<br>
+
 <div id="left">
 ![filter](static/imgs/filter.png) 
 <br>
@@ -159,6 +161,47 @@ personas
 <br>
 ![mutate](static/imgs/mutate.png) 
 </div>
+
+
+----
+
+<br>
+
+<div id="left">
+
+  <div id="left">
+  ![](static/imgs/left-join-extra.gif) 
+  <br>
+  ![](static/imgs/setdiff.gif) 
+  </div>
+  
+  <div id="right">
+  ![](static/imgs/tidyr-spread-gather.gif) 
+  <br>
+  ![](static/imgs/union-all.gif) 
+  </div>
+
+</div>
+
+<div id="right">
+
+  <div id="left">
+  ![](static/imgs/intersect.gif) 
+  <br>
+  ![](static/imgs/semi-join.gif) 
+  </div>
+  
+  <div id="right">
+  ![](static/imgs/setdiff.gif) 
+  <br>
+  ![](static/imgs/anti-join.gif) 
+  </div>
+
+</div>
+
+<br><br>
+
+<small>https://github.com/gadenbuie/tidy-animated-verbs</small>
 
 ----
 
@@ -222,7 +265,7 @@ data
 
 Visualización en R
 
-- Principal caraterística 
+- Una caraterística principal
 - Paquete `ggplot2`. Muy poderoso (entre otros)
 - Existen librerías interactivas
 
@@ -512,7 +555,7 @@ Comunicar no es solo
 <span class="fragment">Es</span>
 
 - Atraer al receptor, y facilitarle la lectura
-- Contar la historía, dar razones
+- Contar la historia, dar razones
 - ...
 
 ---- 
@@ -528,8 +571,11 @@ R poseee muchas otras formas de comunicar:
 
 ----
 
-- htmlwidgets son paquetes que implementan alguna libreria `javascript`
-- 
+htmlwidgets
+
+- Son paquetes que implementan alguna libreria `javascript`
+- Abstrae del conocimiento de de javascript
+- Si bien es R, cada paquete tienes sus propia forma de funcionar 
 
 
 ----
@@ -669,15 +715,63 @@ htmlwidgets::saveWidget(md, file = "md.html", libdir = "libs", selfcontained = F
 <iframe src="md.html" width=1200 height=700></iframe>
 
 ## Rmarkdown { .center .white data-background="#F44336"}
-## Shiny { .center .white data-background="#3F51B5"}
-
-# Gracias
 
 ----
 
-Información Relevante:
+Rmarkdown
 
-- Url shapes https://github.com/justinelliotmeyers/official_chile_2017_census_boundary_shapefile
+- **markdown** es una forma simplificada de escribir texto 
+- **R**markdown es un markdown con pedazos (chunks) de código R
+- Si bien es texto, se puede compilar a distintos formatos: pdf, html, word, ppt
+
+----
+
+```{r, echo=FALSE, comment=NA, cache=FALSE}
+cat(paste(readLines("rmarkdown-test.Rmd", encoding = "UTF-8"), collapse = "\n"))
+```
+
+Ir a ver
+
+## Shiny { .center .white data-background="#3F51B5"}
+
+---- 
+
+Shiny
+
+- Paquete que nos premite hace aplicaciones web
+- Sí! Sin conocer html, css, javascript, requests, JSON
+- No esté pensado para grandes aplicaciones, pero si para todo lo demás
+
+----
+
+![](static/imgs/shinyapps.gif) 
+
+----
+
+```{r, echo=FALSE, comment=NA, cache=FALSE}
+cat(paste(readLines("app.R", encoding = "UTF-8"), collapse = "\n"))
+```
+
+Ir a jugar
+
+# { data-background="static/imgs/end.gif" }
+
+## Introducción al Uso de R
+
+
+<big>
+
+`r icon::fa_globe(color = "#6cc644")` jkunst.com
+
+`r icon::fa_twitter(color = "#1da1f2")` @jbkunst
+
+`r icon::fa_github(color = "#333333")` @jbkunst
+
+`r icon::fa_linkedin(color = "#0077b5")` joshuakunst
+
+</big>
+
+
 
 ```{r, echo=FALSE, include=FALSE, cache=FALSE}
 library(tidyverse)
@@ -696,5 +790,7 @@ lines <- lines[which(stringr::str_detect(lines, "library"))] %>%
   c("", lines)
 
 writeLines(lines, "R/codigo_presentacion.R")
+
+saveRDS(data, "data/data.rds")
 ```
 

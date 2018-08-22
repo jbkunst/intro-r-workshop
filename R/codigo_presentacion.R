@@ -1,7 +1,7 @@
 ## install.packages(c("tidyverse", "haven", "DBI", "RMySQL", "sf", "classInt", "broom", "ggrepel", "plotly", "highcharter", "leaflet", "mapdeck"))
 
 ## ------------------------------------------------------------------------
-library(tidyverse) # combinacion de paquetes para leer, transformar, visualizar
+library(tidyverse) # combinacion de paquetes para importar + transformar + visualizar
 
 comunas <- read_csv("data/codigos_comunales.csv")
 comunas
@@ -328,5 +328,11 @@ md
 
 ## ------------------------------------------------------------------------
 ## htmlwidgets::saveWidget(md, file = "md.html", libdir = "libs", selfcontained = FALSE)
+
+## ------------------------------------------------------------------------
+cat(paste(readLines("rmarkdown-test.Rmd", encoding = "UTF-8"), collapse = "\n"))
+
+## ------------------------------------------------------------------------
+cat(paste(readLines("app.R", encoding = "UTF-8"), collapse = "\n"))
 
 ## ------------------------------------------------------------------------

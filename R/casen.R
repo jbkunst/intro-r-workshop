@@ -21,6 +21,8 @@ casen
 glimpse(casen)
 str(casen)
 
+
+# preguntas ---------------------------------------------------------------
 str(casen$o13)
 names(casen$o13)
 
@@ -31,28 +33,44 @@ pregs <- data_frame(col = names(casen)) %>%
   mutate(preg = pregs)
 pregs
 
+# pregs %>% 
+#   filter(str_detect(tolower(preg), "gresos")) %>%
+#   writexl::write_xlsx("data/casen/casen_preguntas.xlsx")
+
+
+# variables seleccionadas -------------------------------------------------
+vars <- c("region", "comuna", 
+          "tot_hog", "tot_par", 
+          "tot_nuc", "tot_per", 
+          "sexo", "edad", 
+          "ecivil", "pareja", 
+          "e1", "e2a", 
+          "o1", "o2", 
+          "y1", "y2d", 
+          "y3a", "y27a", 
+          "y27b", "y27c", 
+          "y27d", "y27e", 
+          "s4", "s5", 
+          "s12", "s13", 
+          "r1a", "v1", 
+          "v2", "v8", 
+          "v10", "v11", 
+          "v13", "v18", 
+          "v19", "v23", 
+          "v26", "y0101", 
+          "y0301", "ESC", 
+          "educ", "depen", 
+          "hacinamiento")
+
 pregs %>% 
-  # filter(str_detect(tolower(preg), "gresos")) %>% 
-  writexl::write_xlsx("data/casen/casen_preguntas.xlsx")
+  filter()
 
-casen %>% 
-  select(starts_with("y")) %>% 
-  glimpse()
+casen <- select(casen, vars)
+gc()
 
-
-
-casen %>% count(o10)
-ggplot(casen) + geom_histogram(aes(o10))
-
-casen %>% count(y1, sort = TRUE)
-ggplot(casen) + geom_histogram(aes(y1)) + scale_x_log10()
-casen$y1 %>% summary()
-
+glimpse(casen)
 
 # cluster -----------------------------------------------------------------
-casen <- casen %>%
-  select(-folio, -o, -id_vivienda, -provincia, -zona, -hogar)
-
 casendict <- casen %>% 
   distinct(region, comuna) %>% 
   mutate(comuna_lbl = as_factor(comuna))

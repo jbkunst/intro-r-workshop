@@ -1,0 +1,30 @@
+---
+title: "Prueba Rmarkdown"
+output:
+  word_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(knitr)
+opts_chunk$set(echo = FALSE)
+data <- readRDS("data/data.rds")
+```
+
+## R Markdown
+
+Este es un documento markdown. Esta son comunas de la 15va region
+
+```{r}
+kable(data[1:10, c(2, 5, 6)])
+```
+
+## Otra sección
+
+Al infinito y al más allá
+
+```{r}
+ggplot(data, aes(ingreso_promedio_mm, escolaridad_promedio)) + geom_point()
+```
+
