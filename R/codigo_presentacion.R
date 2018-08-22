@@ -1,4 +1,4 @@
-## install.packages(c("tidyverse", "haven", "DBI", "RMySQL", "sf", "classInt", "broom", "ggrepel", "plotly", "highcharter", "leaflet", "mapdeck"))
+## install.packages(c("tidyverse", "haven", "DBI", "RMySQL", "sf", "classInt", "broom", "ggrepel", "smallvis", "plotly", "highcharter", "leaflet", "mapdeck"))
 
 ## ------------------------------------------------------------------------
 library(tidyverse) # combinacion de paquetes para importar + transformar + visualizar
@@ -37,10 +37,6 @@ casen_comuna <- casen %>%
   group_by(comuna) %>% 
   summarise(ingreso_promedio_mm = mean(y1, na.rm = TRUE)/1000)
 casen_comuna
-
-## ------------------------------------------------------------------------
-rm(casen)
-gc()
 
 ## ------------------------------------------------------------------------
 personas_resumen <- personas %>% 
@@ -225,6 +221,129 @@ p3 <- ggplot(dmods, aes(ingreso_promedio_mm, `(Intercept)`)) +
 p3
 
 ## ------------------------------------------------------------------------
+casen
+
+## ------------------------------------------------------------------------
+vars <- c("region", "comuna", 
+          "tot_hog", "tot_par", 
+          "tot_nuc", "tot_per", 
+          "sexo", "edad", 
+          "ecivil", "pareja", 
+          "e1", "e2a", 
+          "o1", "o2", 
+          "y1", "y2d", 
+          "y3a", "y27a", 
+          "y27b", "y27c", 
+          "y27d", "y27e", 
+          "s4", "s5", 
+          "s12", "s13", 
+          "r1a", "v1", 
+          "v2", "v8", 
+          "v10", "v11", 
+          "v13", "v18", 
+          "v19", "v23", 
+          "v26", "y0101", 
+          "y0301", "ESC", 
+          "educ", "depen", 
+          "hacinamiento")
+
+# variables de interes
+casen <- select(casen, vars)
+
+casen <- casen %>% 
+  mutate_if(is.labelled, as_factor) %>% 
+  mutate_at(vars(y1, y2d, s4, s5, v8), function(x) as.numeric(as.character(x)))
+
+# casen num  
+casen_num <- casen %>% 
+  group_by(region, comuna) %>% 
+  select_if(is.numeric) %>% 
+  ungroup()
+
+# casen factor
+casen_fac <- casen %>% 
+  group_by(region, comuna) %>% 
+  select_if(is.factor) %>% 
+  ungroup() %>% 
+  mutate_all(fct_explicit_na, na_level = "NA") %>% 
+  mutate_at(vars(-1, -2), fct_lump, other_level = "Otra") 
+
+nms <- names(casen_fac)
+casen_fac <- map2_dfc(casen_fac, nms, function(v, n){
+  levels(v) <- paste(n, levels(v), sep = "_")
+  v
+})
+
+casen_fac <- casen_fac %>% 
+  mutate_at(vars(1, 2), as.character) %>% 
+  mutate_at(vars(1, 2), str_remove, "^.*_")
+
+# casen num comuna
+casen_num_c <- casen_num %>% 
+  group_by(region, comuna) %>% 
+  summarise_all(mean, na.rm = TRUE) %>% 
+  mutate_all(replace_na, 0) %>% 
+  ungroup()
+
+table_list <- function(x) {
+  # x <- sample(LETTERS[1:5], 20, 1:5, replace = TRUE)
+  t <- table(x)
+  
+  data_frame(
+    cat = names(t),
+    val = as.numeric(prop.table(t))
+  ) %>% 
+    spread(cat, val) %>% 
+    list()
+}
+
+# casen fac comuna
+casen_fac_c <- casen_fac %>% 
+  group_by(region, comuna) %>% 
+  summarise_all(table_list) %>% 
+  unnest()
+
+casen_c <- left_join(casen_num_c, casen_fac_c)
+
+## ------------------------------------------------------------------------
+vars
+
+## ------------------------------------------------------------------------
+casen_c
+
+## ------------------------------------------------------------------------
+library(smallvis)
+umap_casen_c <- smallvis(casen_c, method = "umap", perplexity = 25, eta = 0.01, verbose = FALSE)
+
+head(umap_casen_c)
+
+## ------------------------------------------------------------------------
+casen_umap <- casen_c %>% 
+  select(region, comuna) %>% 
+  bind_cols(as.data.frame(umap_casen_c))
+casen_umap
+
+## ------------------------------------------------------------------------
+p4 <- ggplot(casen_umap, aes(V1, V2, color = region, label = comuna)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  theme_void() + 
+  theme(legend.position = "bottom")
+
+## ------------------------------------------------------------------------
+p4
+
+## ------------------------------------------------------------------------
+p5 <- p4 +
+  geom_text_repel(size = 2, color = "black", alpha = 0.75, segment.colour = "black",
+                  segment.alpha = 0.5, segment.size = 0.25) +
+  facet_wrap(~region) +
+  theme(legend.position = "none")
+
+## ------------------------------------------------------------------------
+p5
+
+## ------------------------------------------------------------------------
 p <- p + theme_gray()
 
 ## ------------------------------------------------------------------------
@@ -257,8 +376,7 @@ data <- left_join(data, comuna_tipohogar, by = c("CODIGO" = "COMUNA"))
 data
 
 ## ------------------------------------------------------------------------
-library(highcharter) # htmlwidget para highcharts
-
+library(highcharter) # htmlwidgets de highcharts
 hc <- hchart(
   data, type = "point",
   hcaes(ingreso_promedio_mm, escolaridad_promedio, group = region2, size = personas),

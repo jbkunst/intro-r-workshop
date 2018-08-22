@@ -1,6 +1,7 @@
 library(tidyverse)
 library(haven)
-
+# devtools::install_github("jlmelville/smallvis/smallvis")
+library(smallvis)
 try(dir.create("data/casen"))
 
 url <- "http://observatorio.ministeriodesarrollosocial.gob.cl/casen-multidimensional/casen/docs/casen_2015_spss.rar"
@@ -70,69 +71,60 @@ gc()
 
 glimpse(casen)
 
+
 # cluster -----------------------------------------------------------------
-casendict <- casen %>% 
-  distinct(region, comuna) %>% 
-  mutate(comuna_lbl = as_factor(comuna))
+# casendict <- casen %>% 
+#   distinct(region, comuna) %>% 
+#   mutate(comuna_lbl = as_factor(comuna))
 
 casen <- casen %>% 
   mutate_if(is.labelled, as_factor)
 
-casen %>% 
-  map(class) %>% 
-  unlist() %>% 
-  table()
-
 casen <- casen %>% 
-  select_if(negate(is.character))
+  mutate_at(vars(y1, y2d, s4, s5, v8), function(x) as.numeric(as.character(x)))
+
+# casen %>% 
+#   map(class) %>% 
+#   unlist() %>% 
+#   table()
+# 
+# casen <- casen %>% 
+#   select_if(negate(is.character))
 
 # casen num  
 casen_num <- casen %>% 
   group_by(region, comuna) %>% 
   select_if(is.numeric) %>% 
+  # mutate_all(replace_na, 0) %>% 
   ungroup()
+
+names(casen_num)
 
 # casen factor
 casen_fac <- casen %>% 
   group_by(region, comuna) %>% 
   select_if(is.factor) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate_all(fct_explicit_na, na_level = "NA") %>% 
+  mutate_at(vars(-1, -2), fct_lump, other_level = "Otra") 
 
-rm(casen)
-gc()
+nms <- names(casen_fac)
+casen_fac <- map2_dfc(casen_fac, nms, function(v, n){
+  levels(v) <- paste(n, levels(v), sep = "_")
+  v
+})
 
+casen_fac <- casen_fac %>% 
+  mutate_at(vars(1, 2), as.character) %>% 
+  mutate_at(vars(1, 2), str_remove, "^.*_")
+
+
+# por comuna --------------------------------------------------------------
 casen_num_c <- casen_num %>% 
   group_by(region, comuna) %>% 
   summarise_all(mean, na.rm = TRUE) %>% 
   mutate_all(replace_na, 0) %>% 
   ungroup()
-
-
-# devtools::install_github("jlmelville/smallvis/smallvis")
-library(smallvis)
-
-
-
-# Using a custom epoch_callback
-uniq_spec <- unique(casen_num_c$region)
-colors <- rainbow(length(uniq_spec))
-names(colors) <- uniq_spec
-casen_plot <- function(x) {
-  plot(x, col = colors[casen_num_c$region])
-}
-
-tsne_casen_num_c <- smallvis(casen_num_c, perplexity = 25, epoch_callback = casen_plot, verbose = TRUE)
-
-umap_casen_num_c <- smallvis(casen_num_c, method = "umap", perplexity = 25, eta = 0.01)
-
-casen_num_c %>% 
-  bind_cols(as.data.frame(umap_casen_num_c)) %>% 
-  ggplot(aes(V1, V2, color = region, label = comuna)) +
-  geom_point() +
-  ggrepel::geom_text_repel(size = 2) 
-  # facet_wrap(~region, scales = "free")
-
-
 
 table_list <- function(x) {
   # x <- sample(LETTERS[1:5], 20, 1:5, replace = TRUE)
@@ -146,15 +138,37 @@ table_list <- function(x) {
     list()
 }
 
+
 casen_fac_c <- casen_fac %>% 
-  # select(1:20) %>% head(1000) %>%
-  mutate_all(fct_explicit_na, na_level = "NA") %>% 
-  mutate_at(vars(-1, -2), fct_lump, other_level = "Otra") %>% 
   group_by(region, comuna) %>% 
   summarise_all(table_list) %>% 
   unnest()
-  
-  group_by()
-  mutate_all()
+
+
+casen_c <- left_join(casen_num_c, casen_fac_c)
+casen_c <- casen_num_c
+glimpse(casen_c)
+
+
+tsne_casen_c <- smallvis(casen_c, perplexity = 25,verbose = TRUE)
+umap_casen_c <- smallvis(casen_c, method = "umap", perplexity = 25, eta = 0.01)
+
+
+casen_c %>% 
+  bind_cols(as.data.frame(tsne_casen_c)) %>% 
+  ggplot(aes(V1, V2, color = region, label = comuna)) +
+  geom_point() +
+  ggrepel::geom_text_repel(size = 2) +
+  facet_wrap(~region, scales = "free")
+
+casen_c %>% 
+  bind_cols(as.data.frame(umap_casen_c)) %>% 
+  ggplot(aes(V1, V2, color = region, label = comuna)) +
+  geom_point() +
+  ggrepel::geom_text_repel(size = 2, color = "black") +
+  scale_color_viridis_d() +
+  facet_wrap(~region)
+
+
 
   
