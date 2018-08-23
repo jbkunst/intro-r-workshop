@@ -1,7 +1,7 @@
 ---
 title: "Prueba Rmarkdown"
 output:
-  word_document:
+  html_document:
     toc: true
 ---
 
