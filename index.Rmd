@@ -115,7 +115,7 @@ comunas
 ```{r}
 library(haven) # SPSS SAS STATA
 
-casen <- read_sav("data/casen/Casen 2015.sav")
+casen <- read_sav("data/casen/Casen 2017.sav")
 casen
 ```
 
@@ -438,7 +438,7 @@ p2 <- ggplot() +
   geom_sf(data = dgeo, aes(fill = escolaridad_promedio), color = "gray80", size = 0.1) +
   scale_fill_viridis_c(option = "B") +
   facet_grid(ingreso ~ escolaridad) +
-  theme_void() 
+  theme_minimal() 
 ```
 
 ----
@@ -568,13 +568,13 @@ vars <- c("region", "comuna",
           "y0301", "ESC", 
           "educ", "depen", 
           "hacinamiento")
-
+vars <- intersect(vars, names(casen))
 # variables de interes
 casen <- select(casen, vars)
 
 casen <- casen %>% 
   mutate_if(is.labelled, as_factor) %>% 
-  mutate_at(vars(y1, y2d, s4, s5, v8), function(x) as.numeric(as.character(x)))
+  mutate_at(vars(y1,s4, s5, v8), function(x) as.numeric(as.character(x)))
 
 # casen num  
 casen_num <- casen %>% 

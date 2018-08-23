@@ -16,7 +16,7 @@ if(!file.exists(file)){
 
 
 # ya descomprimido el archivo ---------------------------------------------
-casen <- read_sav("data/casen/Casen 2015.sav")
+casen <- read_sav("data/casen/Casen 2017.sav")
 casen
 
 glimpse(casen)
@@ -34,9 +34,8 @@ pregs <- data_frame(col = names(casen)) %>%
   mutate(preg = pregs)
 pregs
 
-# pregs %>% 
-#   filter(str_detect(tolower(preg), "gresos")) %>%
-#   writexl::write_xlsx("data/casen/casen_preguntas.xlsx")
+# pregs %>%
+#   writexl::write_xlsx("data/casen/casen_preguntas_17.xlsx")
 
 
 # variables seleccionadas -------------------------------------------------
@@ -63,14 +62,12 @@ vars <- c("region", "comuna",
           "educ", "depen", 
           "hacinamiento")
 
-pregs %>% 
-  filter()
+vars <- intersect(vars, names(casen))
 
 casen <- select(casen, vars)
 gc()
 
 glimpse(casen)
-
 
 # cluster -----------------------------------------------------------------
 # casendict <- casen %>% 

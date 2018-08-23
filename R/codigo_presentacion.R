@@ -9,7 +9,7 @@ comunas
 ## ------------------------------------------------------------------------
 library(haven) # SPSS SAS STATA
 
-casen <- read_sav("data/casen/Casen 2015.sav")
+casen <- read_sav("data/casen/Casen 2017.sav")
 casen
 
 ## ------------------------------------------------------------------------
@@ -152,8 +152,8 @@ niveles <- c("bajo", "medio", "alto")
 dgeo <- dgeo %>% 
   left_join(data, by = c("COMUNA" = "CODIGO")) %>% 
   mutate(
-    escolaridad = classint(escolaridad_promedio, n = 3, style = "kmeans", labels = niveles), 
-    ingreso = classint(ingreso_promedio_mm, n = 3, style = "kmeans", labels = niveles)
+    escolaridad = classint(escolaridad_promedio, n = 3, style = "kmeans", labels = paste("esc",niveles)), 
+    ingreso = classint(ingreso_promedio_mm, n = 3, style = "kmeans", labels = paste("ing",niveles))
   )
 
 glimpse(dgeo)
@@ -165,8 +165,7 @@ p2 <- ggplot() +
   geom_sf(data = dgeo, aes(fill = escolaridad_promedio), color = "gray80", size = 0.1) +
   scale_fill_viridis_c(option = "B") +
   facet_grid(ingreso ~ escolaridad) +
-  theme_minimal() +
-  labs(x = "Ingreso", y = "Escolaridad")
+  theme_minimal() 
 
 ## ------------------------------------------------------------------------
 p2
@@ -246,13 +245,13 @@ vars <- c("region", "comuna",
           "y0301", "ESC", 
           "educ", "depen", 
           "hacinamiento")
-
+vars <- intersect(vars, names(casen))
 # variables de interes
 casen <- select(casen, vars)
 
 casen <- casen %>% 
   mutate_if(is.labelled, as_factor) %>% 
-  mutate_at(vars(y1, y2d, s4, s5, v8), function(x) as.numeric(as.character(x)))
+  mutate_at(vars(y1,s4, s5, v8), function(x) as.numeric(as.character(x)))
 
 # casen num  
 casen_num <- casen %>% 
