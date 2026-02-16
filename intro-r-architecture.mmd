@@ -1,0 +1,39 @@
+graph TD
+    subgraph Repositorio [Estructura del Proyecto R]
+        Desc["DESCRIPTION<br/>(Metadatos y Librerías)"]
+        Inst["inst/ <br/>(Contenido del Taller)"]
+        R_Folder["R/ <br/>(Funciones de apoyo)"]
+        Data["data/ <br/>(Datasets precargados)"]
+    end
+
+    subgraph Contenido_Estudiante [Carpeta /inst]
+        Slides["slides/ <br/>(Presentaciones .Rmd)"]
+        Labs["tutorials/ <br/>(Ejercicios guiados)"]
+        Scripts["scripts/ <br/>(Código de ejemplo .R)"]
+    end
+
+    subgraph Proceso_Render [Motor de R]
+        Knit["Knit / Render<br/>(rmarkdown)"]
+        Eng["R Engine<br/>(Ejecución de código)"]
+    end
+
+    %% Relaciones Técnicas
+    Inst --> Slides
+    Inst --> Labs
+    Inst --> Scripts
+    
+    Data --> Eng
+    R_Folder --> Eng
+    Desc -->|Carga dependencias| Eng
+    
+    Slides --> Knit
+    Labs --> Knit
+    Knit --> Out["HTML / PDF / Slides Visuales"]
+    
+    Scripts --> Eng
+    Eng --> Plots["Gráficos y Tablas"]
+
+    %% Estilos
+    style Repositorio fill:#f5f5f5,stroke:#333,stroke-width:2px
+    style Contenido_Estudiante fill:#e1f5fe,stroke:#01579b
+    style Proceso_Render fill:#fff3e0,stroke:#e65100
